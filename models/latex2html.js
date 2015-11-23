@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * @desc Converts a LaTeX file into HTML using htlatex and does some additional conversations.
+ * @desc Converts a LaTeX file into HTML using htlatex (TeX4ht) and does some additional conversations.
  */
 
 // takes an input path, the input filename and an output path
