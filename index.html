@@ -2,16 +2,24 @@
 <html>
 </head>
 
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+<link rel="stylesheet" href="css/theme.bootstrap.css">
+<link rel="stylesheet" href="css/jquery.tablesorter.pager.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+<script src="js/jquery.tablesorter.js"></script>
+<script src="js/jquery.tablesorter.widgets.js"></script>
+<script src="js/jquery.tablesorter.pager.js"></script>
 
 </head>
 
 <body>
+
   <nav class="navbar navbar-default">
     <div class="container-fluid">
       <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
+     <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
@@ -20,20 +28,14 @@
         </button>
         <a class="navbar-brand" href="index.html">Brand</a>
       </div>
-
       <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
-          <li><a href="#">Link</a></li>
+          <li class="active"><a href="#">Start<span class="sr-only">(current)</span></a></li>
+          <li><a href="#">Documentation</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <form class="navbar-form navbar-left" role="search">
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search for Papers">
-            </div>
-            <button type="submit" class="btn btn-default">Submit</button>
-          </form>
+          
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
             <ul class="dropdown-menu">
@@ -47,34 +49,151 @@
         </ul>
       </div>
       <!-- /.navbar-collapse -->
-    </div>
+   </div>
     <!-- /.container-fluid -->
   </nav>
+  
+    
+ <div class="container-fluid" style="width: 70%; max width: 70%"> 
+  <table> <!-- bootstrap classes added by the uitheme widget -->
+ <!--table head -->
+  <thead>
+    <tr>
+      <th>Author</th>
+      <th>Title</th>
+      <th>Date of publication</th>
+      <th>Search term</th>
+  </thead>
+  <!--table footer -->
+  <tfoot>
+    <tr>
+	
+      <th colspan="7" class="ts-pager form-horizontal tablesorter-pager">
+        <button type="button" class="btn first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
+        <button type="button" class="btn prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
+        <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+        <button type="button" class="btn next"><i class="icon-arrow-right glyphicon glyphicon-forward"></i></button>
+        <button type="button" class="btn last"><i class="icon-step-forward glyphicon glyphicon-step-forward"></i></button>
+        <select class="pagesize input-mini" title="Select page size">
+          <option selected="selected" value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="40">40</option>
+        </select>
+        <!--<select class="pagenum input-mini" title="Select page number"></select>-->
+     </th>
+    </tr>
+  </tfoot>
+  <tbody id="paperTable">
+    <tr><td>Scientist01</td><td><a href = "samplepage.html">Mathematics</a></td> <td>01.01.80</td><td>70</td></tr>
+    <tr><td>Scientist02</td><td>Mathematics</td><td>01.01.90</td><td>88</td></tr>
+    <tr><td>Scientist03</td><td>Languages</td> <td>01.01.85</td><td>95</td></tr>
+    <tr><td>Scientist04</td><td>Languages</td> <td>01.01.60</td><td>55</td></tr>
+    <tr><td>Scientist05</td><td>Languages</td> <td>01.01.68</td><td>80</td></tr>
+    <tr><td>Scientist06</td><td>Mathematics</td> <td>01.01.99</td><td>99</td></tr>
+    <tr><td>Scientist07</td><td>Mathematics</td> <td>01.01.85</td><td>68</td></tr>
+    <tr><td>Scientist08</td><td>Languages</td> <td>01.01.99</td><td>90</td></tr>
+    <tr><td>Scientist09</td><td>Mathematics</td> <td>01.01.80</td><td>50</td></tr>
+    <tr><td>Scientist10</td><td>Languages</td> <td>01.01.85</td><td>100</td></tr>
+    <tr><td>Scientist11</td><td>Languages</td> <td>01.01.86</td><td>85</td></tr>
+    <tr><td>Scientist12</td><td>Mathematics</td> <td>01.01.99</td><td>75</td></tr>
+    <tr><td>Scientist13</td><td>Languages</td> <td>01.01.99</td><td>80</td></tr>
+    <tr><td>Scientist14</td><td>Languages</td> <td>01.01.50</td><td>45</td></tr>
+    <tr><td>Scientist15</td><td>Languages</td> <td>01.01.95</td><td>35</td></tr>
+    <tr><td>Scientist16</td><td>Languages</td> <td>01.01.99</td><td>50</td></tr>
+    <tr><td>Scientist17</td><td>Languages</td> <td>01.01.80</td><td>100</td></tr>
+    <tr><td>Scientist18</td><td>Mathematics</td> <td>01.01.30</td><td>49</td></tr>
+    <tr><td>Scientist19</td><td>Languages</td> <td>01.01.68</td><td>90</td></tr>
+    <tr><td>Scientist20</td><td>Mathematics</td> <td>01.01.40</td><td>45</td></tr>
+    <tr><td>Scientist21</td><td>Languages</td> <td>01.01.50</td><td>45</td></tr>
+    <tr><td>Scientist22</td><td>Mathematics</td> <td>01.01.99</td><td>99</td></tr>
+    <tr><td>Scientist23</td><td>Mathematics</td> <td>01.01.82</td><td>77</td></tr>
+    <tr><td>Scientist24</td><td>Languages</td> <td>01.01.99</td><td>91</td></tr>
+    <tr><td>Scientist25</td><td>Mathematics</td> <td>01.01.22</td><td>96</td></tr>
+    <tr><td>Scientist26</td><td>Languages</td> <td>01.01.37</td><td>29</td></tr>
+    <tr><td>Scientist27</td><td>Mathematics</td> <td>01.01.86</td><td>82</td></tr>
+    <tr><td>Scientist28</td><td>Languages</td> <td>01.01.99</td><td>25</td></tr>
+    <tr><td>Scientist29</td><td>Mathematics</td> <td>01.01.77</td><td>47</td></tr>
+    <tr><td>Scientist30</td><td>Languages</td> <td>01.01.19</td><td>35</td></tr>
+    <tr><td>Scientist31</td><td>Mathematics</td> <td>01.01.90</td><td>27</td></tr>
+    <tr><td>Scientist32</td><td>Languages</td> <td>01.01.60</td><td>75</td></tr>
+    <tr><td>Scientist33</td><td>Mathematics</td> <td>01.01.4</td><td>31</td></tr>
+    <tr><td>Scientist34</td><td>Languages</td> <td>01.01.77</td><td>97</td></tr>
+    <tr><td>Scientist35</td><td>Mathematics</td> <td>01.01.5</td><td>81</td></tr>
+    <tr><td>Scientist36</td><td>Languages</td> <td>01.01.70</td><td>61</td></tr>
+    <tr><td>Scientist37</td><td>Mathematics</td> <td>01.01.60</td><td>3</td></tr>
+    <tr><td>Scientist38</td><td>Languages</td> <td>01.01.63</td><td>39</td></tr>
+    <tr><td>Scientist39</td><td>Mathematics</td> <td>01.01.50</td><td>46</td></tr>
+    <tr><td>Scientist40</td><td>Languages</td> <td>01.01.51</td><td>75</td></tr>
+    <tr><td>Scientist41</td><td>Mathematics</td> <td>01.01.43</td><td>34</td></tr>
+    <tr><td>Scientist42</td><td>Languages</td> <td>01.01.11</td><td>89</td></tr>
+    <tr><td>Scientist43</td><td>Mathematics</td> <td>01.01.48</td><td>92</td></tr>
+    <tr><td>Scientist44</td><td>Languages</td> <td>01.01.82</td><td>2</td></tr>
+    <tr><td>Scientist45</td><td>Mathematics</td> <td>01.01.91</td></tr>
+    <tr><td>Scientist46</td><td>Languages</td> <td>01.01.4</td></tr>
+    <tr><td>Scientist47</td><td>Mathematics</td> <td>01.01.89</td></tr>
+    <tr><td>Scientist48</td><td>Languages</td> <td>01.01.90</td></tr>
+    <tr><td>Scientist49</td><td>Mathematics</td> <td>01.01.42</td></tr>
+    <tr><td>Scientist50</td><td>Languages</td> <td>01.01.56</td><td>37</td></tr>
+  </tbody>
+</table>
+</div>
+<script>
+$(function() {
+ // call the tablesorter plugin and apply the uitheme widget
+  $("table").tablesorter({
+    // this will apply the bootstrap theme if "uitheme" widget is included
+    // the widgetOptions.uitheme is no longer required to be set
+    theme : "bootstrap",
 
-  <div class="container">
-    <div class="list-group">
-      <a href="samplePage.html" class="list-group-item">
-        <h4 class="list-group-item-heading">Heading One</h4>
-        <p class="list-group-item-text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no
-          sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-      </a>
-      <a href="samplePage.html" class="list-group-item">
-        <h4 class="list-group-item-heading">Heading Two</h4>
-        <p class="list-group-item-text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no
-          sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-      </a>
-      <a href="samplePage.html" class="list-group-item">
-        <h4 class="list-group-item-heading">Heading Three</h4>
-        <p class="list-group-item-text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no
-          sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-      </a>
-    </div>
-  </div>
+    widthFixed: false,
 
+    headerTemplate : '{content} {icon}', // new in v2.7. Needed to add the bootstrap icon!
 
-  <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    // widget code contained in the jquery.tablesorter.widgets.js file
+    // use the zebra stripe widget if you plan on hiding any rows (filter widget)
+    widgets : [ "uitheme", "filter", "zebra" ],
+
+    widgetOptions : {
+      // using the default zebra striping class name, so it actually isn't included in the theme variable above
+      // this is ONLY needed for bootstrap theming if you are using the filter widget, because rows are hidden
+      zebra : ["even", "odd"],
+
+      // reset filters button
+      filter_reset : ".reset",
+
+      // extra css class name (string or array) added to the filter element (input or select)
+      filter_cssFilter: "form-control",
+
+      // set the uitheme widget to use the bootstrap theme class names
+      // this is no longer required, if theme is set
+      // ,uitheme : "bootstrap"
+
+    }
+  })
+  .tablesorterPager({
+
+    // target the pager markup - see the HTML block below
+    container: $(".ts-pager"),
+
+    // target the pager page select dropdown - choose a page
+    cssGoto  : ".pagenum",
+
+    // remove rows from the table to speed up the sort of large tables.
+    // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
+    removeRows: false,
+
+    // output string - default is '{page}/{totalPages}';
+    // possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
+    output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
+
+  });
+
+});
+</script>
+
+  
   <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 
 
 </body>
