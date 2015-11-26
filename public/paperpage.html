@@ -39,9 +39,16 @@
     <!-- /.container-fluid -->
   </nav>
 
-
   <div class="container">
-    <div id="map" style="height: 400px"></div>
+    <h1 id="papertitle">...</h1>
+    <h3 id="paperdate" style="text-align: right;">...</h3>
+    <h4 id="paperauthor">...</h4>
+    <div class="panel panel-default"><div class="panel-body">
+    <!-- Maps get embedded in the embedded pages -->
+    <!--div id="map" style="height: 400px"></div-->
+      <iframe id="paperframe" style="border-style: none;"></iframe>
+    </div></div>
+    <button type="button" class="btn first" id="papereditbutton">Edit Paper Submission</button>
   </div>
 
   <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
@@ -49,6 +56,16 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
   <script src="js/map.js"></script>
 
+  <script>
+    // snippet how to load the iframe stuff
+    // a la blablub.de/paperpage.html#paperidorsomething
+    if(window.location.hash) {
+      // load iframe html
+    }
+    else {
+      // that should never happen...
+    }
+  </script>
 
 </body>
 
