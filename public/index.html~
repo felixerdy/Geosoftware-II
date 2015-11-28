@@ -418,7 +418,7 @@
 			<br>
 			<div class="row">
 			    <div class="col-md-3"><label for="publication_date">Date of publication:</label></div>
-				<div class="col-md-9"><input type="text" id="publication_date" class="datepicker form-control" style="width: 100%;" name="publication_date"></div>
+				<div class="col-md-9"><input id="publication_date" class="datepicker " style="width: 100%;" name="publication_date"></div>
 			</div>
 			<br>
 			<br>
