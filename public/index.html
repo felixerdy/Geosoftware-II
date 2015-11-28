@@ -4,9 +4,12 @@
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
   <link rel="stylesheet" href="css/theme.bootstrap.css">
+  <link rel="stylesheet" href="js/bs-datepicker/css/bootstrap-datepicker3.standalone.css">
   <link rel="stylesheet" href="css/jquery.tablesorter.pager.css">
   <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+  <script src="js/bs-datepicker/js/bootstrap-datepicker.min.js"></script>
+  <script src="js/bs-datepicker/js/locales/bootstrap-datepicker.en-GB.min.js" charset="UTF-8"></script>
   <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
   <script src="js/jquery.tablesorter.js"></script>
   <script src="js/jquery.tablesorter.widgets.js"></script>
@@ -51,12 +54,11 @@
 
 
   <div class="container" style="width: 70%; max width: 70%;">
-    <pre style="white-space: pre-wrap; word-wrap: break-word; hyphens: auto; text-align: center;">
-      Skypaper is a new Way to distribute your geospatial publications. Start by searching for a publication in the table below or publish your own paper. See the documentation for information about the upload process.
+    <div class="panel panel-default"><div class="panel-body">
+      <p>Skypaper is a new way to distribute your geospatial publications. Start by searching for a publication in the table below or publish your own paper. See the documentation for information about the upload process.</p>
+      <p style="text-align: center;"><a class="btn btn-default" data-toggle="modal" data-target="#myModal">Publish</a></p>
 
-      <a class="btn btn-default" data-toggle="modal" data-target="#myModal">Publish</a>
-
-    </pre>
+    </div></div>
 
   </div>
 
@@ -416,7 +418,7 @@
 			<br>
 			<div class="row">
 			    <div class="col-md-3"><label for="publication_date">Date of publication:</label></div>
-				<div class="col-md-9"><input id="publication_date" style="width: 100%;" name="publication_date"></div>
+				<div class="col-md-9"><input type="text" id="publication_date" class="datepicker form-control" style="width: 100%;" name="publication_date"></div>
 			</div>
 			<br>
 			<br>
@@ -504,6 +506,13 @@
 
         });
 
+    });
+
+    // Initialize the datepicker widget...
+    $('.datepicker').datepicker({
+      startView: 1,
+      todayBtn: true,
+      format: 'yyyy/mm/dd',
     });
   </script>
 
