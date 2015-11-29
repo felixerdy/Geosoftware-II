@@ -4,6 +4,8 @@ var express = require('express');
 var multer  = require('multer');
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
+var path = require('path');
+var fs = require('fs');
 
 var app = express();
 var upload = multer({ dest: 'uploadcache/' });
@@ -45,20 +47,31 @@ app.use(function(req, res, next) {
 var paperupload = upload.fields([{ name: 'texfile', maxCount: 1 }, { name: 'otherfiles', maxCount: 50 }]);
 app.post('/addPaper', paperupload, function(req, res) {
   
-  // TODO saving stuff into folders/database and start conversion
+
   console.log("title: "+ req.body.title + "\nfilename: " + req.files["texfile"][0].originalname);
-  /*var paper = new Paper({
+  // Since we need the DB object id, we first create an entry
+  // half-empty, then create the paths using the ID and then
+  // insert the pathstrings into the entry.
+  var paper = new Paper({
     title: req.body.title,
     author: req.body.author,
     publicaton_date: req.body.publication_date,
-    htmlCode: req.body.htmlCode,
-    geoTiff_path: req.body.geoTiff_path,
-    rData_path: req.body.rData_path,
-    geoJSON_path: req.body.geoJSON_path
+    htmlCode: "",
+    geoTiff_path: [],
+    rData_path: [],
+    geoJSON_path: []
   });
   paper.save(function(error) {
+    console.log("Fail creating paper DB entry for " + req.body.title + ": " + error);
+  });
 
-  });*/
+  var paperid = paper._id;
+  var paperpath = "./papers";
+
+  fs.mkdirSync(path.join(paperpath, paperid));
+
+  // TODO saving stuff into subfolders and start conversion
+
   res.status(200).json({status:"ok"});
 });
 
