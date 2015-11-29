@@ -1,31 +1,53 @@
 "use strict"
 
 var express = require('express');
+var multer  = require('multer');
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
+
 var app = express();
+var upload = multer({ dest: 'uploadcache/' });
+
 var Paper = require('./models/paperSchema');
 var converter = require('./models/latex2html');
 
-app.use(bodyParser.urlencoded({
-  extended: true,
-  limit: '50mb'
-})); // to enable processing of the received post content
-app.use(bodyParser.json({
-  limit: '50mb'
-}));
 
 var webPort = 8080;
 var dbPort = 27017;
 
+// Connect to database...
 mongoose.connect('mongodb://localhost:' + dbPort + '/paperCollection');
+var database = mongoose.connection;
+var connection_failed = false;
 
+database.on('error', function(error){
+    console.log("ERROR: Couldn't establish database connection:\n" + error);
+    connection_failed = true;
+});
+
+
+// Serve static pages...
 app.use(express.static('./public'));
 
-app.post('/addPaper', function(req, res) {
+// Adds CORS-string into the header of each response.
+// Also returns to all requests to avoid connection time-outs.
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  if(connection_failed) {
+    res.status(400).send("database not connected");
+  }
+  else {
+    next();
+  }
+});
 
-  var paper = new Paper({
+// Handle paper upload request.
+var paperupload = upload.fields([{ name: 'texfile', maxCount: 1 }, { name: 'otherfiles', maxCount: 50 }]);
+app.post('/addPaper', paperupload, function(req, res) {
+  
+  // TODO saving stuff into folders/database and start conversion
+  console.log("title: "+ req.body.title + "\nfilename: " + req.files["texfile"][0].originalname);
+  /*var paper = new Paper({
     title: req.body.title,
     author: req.body.author,
     publicaton_date: req.body.publication_date,
@@ -36,8 +58,8 @@ app.post('/addPaper', function(req, res) {
   });
   paper.save(function(error) {
 
-  });
-
+  });*/
+  res.status(200).json({status:"ok"});
 });
 
 app.get('/getPapers', function(req, res) {
