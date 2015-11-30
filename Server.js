@@ -112,13 +112,13 @@ app.post('/addPaper', paperupload, function(req, res) {
   
   // saving all other files.
   for(let fileno = 0; fileno < req.files["otherfiles"].length; fileno++) {
-    if(path.extname(req.files["otherfiles"][0].originalname) == '.rdata'){
+    if(path.extname(req.files["otherfiles"][fileno].originalname) == '.rdata'){
       copyToIDFolder("rdata", "otherfiles", fileno);
     }
-    else if(path.extname(req.files["otherfiles"][0].originalname) == '.tif'){
+    else if(path.extname(req.files["otherfiles"][fileno].originalname) == '.tif'){
       copyToIDFolder("geotiff", "otherfiles", fileno);
     }
-    else if(path.extname(req.files["otherfiles"][0].originalname) == '.json'){
+    else if(path.extname(req.files["otherfiles"][fileno].originalname) == '.json'){
       copyToIDFolder("geojson", "otherfiles", fileno);
     }
     else {
