@@ -3,7 +3,7 @@
 "use strict"
 
 $("#uploadButton").click(function() {
-  
+
   // Prevent multiple form submissions.
   if(! $("#uploadButton").hasClass("disabled")) {
 
@@ -19,6 +19,7 @@ $("#uploadButton").click(function() {
 
     // Send data...
     var formData = new FormData($("#paperform")[0]);
+
 
     $.ajax({
       url: 'http://localhost:8080/addPaper',

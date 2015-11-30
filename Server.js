@@ -79,12 +79,12 @@ app.post('/addPaper', paperupload, function(req, res) {
   var paperpath = "./papers";
 
   // the papers folder
-  // fs.exists - > Deprecated!!!
+  // fs.exists - > Deprecated!!! maybe stats.isDirectory()
   if (!fs.existsSync(paperpath)) {
     fs.mkdir(paperpath);
   }
   // the project folder
-  fs.mkdir(path.join(paperpath, paperid));
+  fs.mkdirSync(path.join(paperpath, paperid));
   // the path for unprocessed tex files and related images
   fs.mkdir(path.join(paperpath, paperid, "tex"));
   // the output path
