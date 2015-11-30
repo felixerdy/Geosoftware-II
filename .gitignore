@@ -29,6 +29,8 @@ node_modules
 
 # folder where the files are cached
 uploadcache
+# the paper folder
+papers
 
 # Optional npm cache directory
 .npm
