@@ -103,7 +103,7 @@ app.post('/addPaper', paperupload, function(req, res) {
   }
 
   // saving the tex file
-  if(path.extname(req.files["texfile"][0].originalname) == '.tex'){
+  if( /^\.[t|T][e|E][x|X]$/.test(path.extname(req.files["texfile"][0].originalname)) ){
     copyToIDFolder("tex", "texfile", 0);
   }
   else{
@@ -112,13 +112,13 @@ app.post('/addPaper', paperupload, function(req, res) {
   
   // saving all other files.
   for(let fileno = 0; fileno < req.files["otherfiles"].length; fileno++) {
-    if(path.extname(req.files["otherfiles"][fileno].originalname) == '.rdata'){
+    if( /^\.[r|R][d|D][a|A][t|T][a|A]$/.test(path.extname(req.files["otherfiles"][fileno].originalname)) ){
       copyToIDFolder("rdata", "otherfiles", fileno);
     }
-    else if(path.extname(req.files["otherfiles"][fileno].originalname) == '.tif'){
+    else if( /^\.[t|T][i|I][f|F]$/.test(path.extname(req.files["otherfiles"][fileno].originalname)) ){
       copyToIDFolder("geotiff", "otherfiles", fileno);
     }
-    else if(path.extname(req.files["otherfiles"][fileno].originalname) == '.json'){
+    else if( /^\.[j|J][s|S][o|O][n|N]$/.test(path.extname(req.files["otherfiles"][fileno].originalname)) ){
       copyToIDFolder("geojson", "otherfiles", fileno);
     }
     else {
