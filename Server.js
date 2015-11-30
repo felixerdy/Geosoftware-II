@@ -95,7 +95,7 @@ app.post('/addPaper', paperupload, function(req, res) {
   fs.mkdir(path.join(paperpath, paperid, "geojson"));
   
   //saving the tex file
-  if(path.extname(req.files["texfile"][0].originalname) == '.tex'|| req.files["texfile"][0].originalname) == '.TeX' || req.files["texfile"][0].originalname) == '.TEX'){
+  if(path.extname(req.files["texfile"][0].originalname) == '.tex'|| path.extname(req.files["texfile"][0].originalname) == '.TeX' || path.extname(req.files["texfile"][0].originalname) == '.TEX'){
     var texPath = path.join("./uploadcache/", req.files["texfile"][0].filename);
     var source = fs.createReadStream(texPath);
     var dest = fs.createWriteStream(path.join(paperpath, paperid, "tex", req.files["texfile"][0].originalname));
@@ -110,7 +110,7 @@ app.post('/addPaper', paperupload, function(req, res) {
   
   // Saving all other files.
   for(let fileno = 0; fileno < req.files["otherfiles"].length; fileno++) {
-    if(path.extname(req.files["otherfiles"][0].originalname) == '.rdata' || req.files["otherfiles"][0].originalname) == '.RDATA'){
+    if(path.extname(req.files["otherfiles"][0].originalname) == '.rdata' || path.extname(req.files["otherfiles"][0].originalname) == '.RDATA'){
       let sourcePath = path.join("./uploadcache/", req.files["otherfiles"][0].filename);
       let source = fs.createReadStream(sourcePath);
       let dest = fs.createWriteStream(path.join(paperpath, paperid, "rdata", req.files["otherfiles"][0].originalname));
@@ -119,7 +119,7 @@ app.post('/addPaper', paperupload, function(req, res) {
       source.on('end', function() { /* copied */ });
       source.on('error', function(err) { /* error */ });
     }
-    else if(path.extname(req.files["otherfiles"][0].originalname) == '.tif' || req.files["otherfiles"][0].originalname) == '.TIF'){
+    else if(path.extname(req.files["otherfiles"][0].originalname) == '.tif' || path.extname(req.files["otherfiles"][0].originalname) == '.TIF'){
       let sourcePath = path.join("./uploadcache/", req.files["otherfiles"][0].filename);
       let source = fs.createReadStream(sourcePath);
       let dest = fs.createWriteStream(path.join(paperpath, paperid, "geotiff", req.files["otherfiles"][0].originalname));
@@ -128,7 +128,7 @@ app.post('/addPaper', paperupload, function(req, res) {
       source.on('end', function() { /* copied */ });
       source.on('error', function(err) { /* error */ });
     }
-    else if(path.extname(req.files["otherfiles"][0].originalname) == '.json' || req.files["otherfiles"][0].originalname) == '.JSON'){
+    else if(path.extname(req.files["otherfiles"][0].originalname) == '.json' || path.extname(req.files["otherfiles"][0].originalname) == '.JSON'){
       let sourcePath = path.join("./uploadcache/", req.files["otherfiles"][0].filename);
       let source = fs.createReadStream(sourcePath);
       let dest = fs.createWriteStream(path.join(paperpath, paperid, "geojson", req.files["otherfiles"][0].originalname));
