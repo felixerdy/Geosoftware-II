@@ -54,8 +54,6 @@ var paperupload = upload.fields([{
 }]);
 app.post('/addPaper', paperupload, function(req, res) {
 
-
-  console.log("title: " + req.body.title + "\nfilename: " + req.files["texfile"][0].originalname);
   // Since we need the DB object id, we first create an entry
   // half-empty, then create the paths using the ID and then
   // insert the pathstrings into the entry.
@@ -81,7 +79,7 @@ app.post('/addPaper', paperupload, function(req, res) {
   // the papers folder
   // fs.exists - > Deprecated!!! maybe stats.isDirectory()
   if (!fs.existsSync(paperpath)) {
-    fs.mkdir(paperpath);
+    fs.mkdirSync(paperpath);
   }
   // the project folder
   fs.mkdirSync(path.join(paperpath, paperid));
@@ -93,58 +91,38 @@ app.post('/addPaper', paperupload, function(req, res) {
   fs.mkdir(path.join(paperpath, paperid, "geotiff"));
   fs.mkdir(path.join(paperpath, paperid, "rdata"));
   fs.mkdir(path.join(paperpath, paperid, "geojson"));
-  
-  //saving the tex file
-  if(path.extname(req.files["texfile"][0].originalname) == '.tex'|| path.extname(req.files["texfile"][0].originalname) == '.TeX' || path.extname(req.files["texfile"][0].originalname) == '.TEX'){
-    var texPath = path.join("./uploadcache/", req.files["texfile"][0].filename);
-    var source = fs.createReadStream(texPath);
-    var dest = fs.createWriteStream(path.join(paperpath, paperid, "tex", req.files["texfile"][0].originalname));
+
+  // a helper function to copy files
+  function copyToIDFolder(subfolder, formname, fileno) {
+    var sourcePath = path.join("./uploadcache/", req.files[formname][fileno].filename);
+    var source = fs.createReadStream(sourcePath);
+    var dest = fs.createWriteStream(path.join(paperpath, paperid, subfolder, req.files[formname][fileno].originalname));
 
     source.pipe(dest);
-    source.on('end', function() { /* copied */ });
-    source.on('error', function(err) { /* error */ });
+    source.on('error', function(err) { throw "Error copying file into."; });
+  }
+
+  // saving the tex file
+  if(path.extname(req.files["texfile"][0].originalname) == '.tex'){
+    copyToIDFolder("tex", "texfile", 0);
   }
   else{
     res.status(400).json({status:"uploaded file was not a tex file"});
   }
   
-  // Saving all other files.
+  // saving all other files.
   for(let fileno = 0; fileno < req.files["otherfiles"].length; fileno++) {
-    if(path.extname(req.files["otherfiles"][0].originalname) == '.rdata' || path.extname(req.files["otherfiles"][0].originalname) == '.RDATA'){
-      let sourcePath = path.join("./uploadcache/", req.files["otherfiles"][0].filename);
-      let source = fs.createReadStream(sourcePath);
-      let dest = fs.createWriteStream(path.join(paperpath, paperid, "rdata", req.files["otherfiles"][0].originalname));
-
-      source.pipe(dest);
-      source.on('end', function() { /* copied */ });
-      source.on('error', function(err) { /* error */ });
+    if(path.extname(req.files["otherfiles"][0].originalname) == '.rdata'){
+      copyToIDFolder("rdata", "otherfiles", fileno);
     }
-    else if(path.extname(req.files["otherfiles"][0].originalname) == '.tif' || path.extname(req.files["otherfiles"][0].originalname) == '.TIF'){
-      let sourcePath = path.join("./uploadcache/", req.files["otherfiles"][0].filename);
-      let source = fs.createReadStream(sourcePath);
-      let dest = fs.createWriteStream(path.join(paperpath, paperid, "geotiff", req.files["otherfiles"][0].originalname));
-
-      source.pipe(dest);
-      source.on('end', function() { /* copied */ });
-      source.on('error', function(err) { /* error */ });
+    else if(path.extname(req.files["otherfiles"][0].originalname) == '.tif'){
+      copyToIDFolder("geotiff", "otherfiles", fileno);
     }
-    else if(path.extname(req.files["otherfiles"][0].originalname) == '.json' || path.extname(req.files["otherfiles"][0].originalname) == '.JSON'){
-      let sourcePath = path.join("./uploadcache/", req.files["otherfiles"][0].filename);
-      let source = fs.createReadStream(sourcePath);
-      let dest = fs.createWriteStream(path.join(paperpath, paperid, "geojson", req.files["otherfiles"][0].originalname));
-
-      source.pipe(dest);
-      source.on('end', function() { /* copied */ });
-      source.on('error', function(err) { /* error */ });
+    else if(path.extname(req.files["otherfiles"][0].originalname) == '.json'){
+      copyToIDFolder("geojson", "otherfiles", fileno);
     }
     else {
-      let sourcePath = path.join("./uploadcache/", req.files["otherfiles"][0].filename);
-      let source = fs.createReadStream(sourcePath);
-      let dest = fs.createWriteStream(path.join(paperpath, paperid, "tex", req.files["otherfiles"][0].originalname));
-
-      source.pipe(dest);
-      source.on('end', function() { /* copied */ });
-      source.on('error', function(err) { /* error */ });
+      copyToIDFolder("tex", "otherfiles", fileno);
     }
   }
   // TODO start conversion
