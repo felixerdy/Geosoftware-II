@@ -92,14 +92,16 @@ app.post('/addPaper', paperupload, function(req, res) {
   fs.mkdir(path.join(paperpath, paperid, "rdata"));
   fs.mkdir(path.join(paperpath, paperid, "geojson"));
 
-  // a helper function to copy files
+  // a helper function to move files into the specific papers directory
   function copyToIDFolder(subfolder, formname, fileno) {
     var sourcePath = path.join("./uploadcache/", req.files[formname][fileno].filename);
     var source = fs.createReadStream(sourcePath);
     var dest = fs.createWriteStream(path.join(paperpath, paperid, subfolder, req.files[formname][fileno].originalname));
 
     source.pipe(dest);
-    source.on('error', function(err) { throw "Error copying file into."; });
+    source.on('error', function(err) { throw "Error copying file into ." + subfolder; });
+
+    fs.unlink(path.join("./uploadcache/", req.files[formname][fileno].filename));
   }
 
   // saving the tex file
