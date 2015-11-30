@@ -1,14 +1,16 @@
 "use strict"
 
 var express = require('express');
-var multer  = require('multer');
+var multer = require('multer');
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
 var path = require('path');
 var fs = require('fs');
 
 var app = express();
-var upload = multer({ dest: 'uploadcache/' });
+var upload = multer({
+  dest: 'uploadcache/'
+});
 
 var Paper = require('./models/paperSchema');
 var converter = require('./models/latex2html');
@@ -22,9 +24,9 @@ mongoose.connect('mongodb://localhost:' + dbPort + '/paperCollection');
 var database = mongoose.connection;
 var connection_failed = false;
 
-database.on('error', function(error){
-    console.log("ERROR: Couldn't establish database connection:\n" + error);
-    connection_failed = true;
+database.on('error', function(error) {
+  console.log("ERROR: Couldn't establish database connection:\n" + error);
+  connection_failed = true;
 });
 
 
@@ -35,20 +37,25 @@ app.use(express.static('./public'));
 // Also returns to all requests to avoid connection time-outs.
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
-  if(connection_failed) {
+  if (connection_failed) {
     res.status(400).send("database not connected");
-  }
-  else {
+  } else {
     next();
   }
 });
 
 // Handle paper upload request.
-var paperupload = upload.fields([{ name: 'texfile', maxCount: 1 }, { name: 'otherfiles', maxCount: 50 }]);
+var paperupload = upload.fields([{
+  name: 'texfile',
+  maxCount: 1
+}, {
+  name: 'otherfiles',
+  maxCount: 50
+}]);
 app.post('/addPaper', paperupload, function(req, res) {
-  
 
-  console.log("title: "+ req.body.title + "\nfilename: " + req.files["texfile"][0].originalname);
+
+  console.log("title: " + req.body.title + "\nfilename: " + req.files["texfile"][0].originalname);
   // Since we need the DB object id, we first create an entry
   // half-empty, then create the paths using the ID and then
   // insert the pathstrings into the entry.
@@ -62,27 +69,36 @@ app.post('/addPaper', paperupload, function(req, res) {
     geoJSON_path: []
   });
   paper.save(function(error) {
-    console.log("Fail creating paper DB entry for " + req.body.title + ": " + error);
+    if (error) {
+      console.log("Fail creating paper DB entry for " + req.body.title + ": " + error);
+    }
   });
 
   // Create project folders.
-  var paperid = paper._id;
+  var paperid = paper._id.toString();
   var paperpath = "./papers";
 
+  // the papers folder
+  // fs.exists - > Deprecated!!!
+  if (!fs.existsSync(paperpath)) {
+    fs.mkdir(paperpath);
+  }
   // the project folder
-  fs.mkdirSync(path.join(paperpath, paperid));
+  fs.mkdir(path.join(paperpath, paperid));
   // the path for unprocessed tex files and related images
-  fs.mkdirSync(path.join(paperpath, paperid, "tex"));
+  fs.mkdir(path.join(paperpath, paperid, "tex"));
   // the output path
-  fs.mkdirSync(path.join(paperpath, paperid, "html"));
+  fs.mkdir(path.join(paperpath, paperid, "html"));
   // the special content paths
-  fs.mkdirSync(path.join(paperpath, paperid, "geotiff"));
-  fs.mkdirSync(path.join(paperpath, paperid, "rdata"));
-  fs.mkdirSync(path.join(paperpath, paperid, "geojson"));
+  fs.mkdir(path.join(paperpath, paperid, "geotiff"));
+  fs.mkdir(path.join(paperpath, paperid, "rdata"));
+  fs.mkdir(path.join(paperpath, paperid, "geojson"));
 
   // TODO saving stuff into subfolders and start conversion
 
-  res.status(200).json({status:"ok"});
+  res.status(200).json({
+    status: "ok"
+  });
 });
 
 app.get('/getPapers', function(req, res) {
