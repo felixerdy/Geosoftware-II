@@ -65,10 +65,20 @@ app.post('/addPaper', paperupload, function(req, res) {
     console.log("Fail creating paper DB entry for " + req.body.title + ": " + error);
   });
 
+  // Create project folders.
   var paperid = paper._id;
   var paperpath = "./papers";
 
+  // the project folder
   fs.mkdirSync(path.join(paperpath, paperid));
+  // the path for unprocessed tex files and related images
+  fs.mkdirSync(path.join(paperpath, paperid, "tex"));
+  // the output path
+  fs.mkdirSync(path.join(paperpath, paperid, "html"));
+  // the special content paths
+  fs.mkdirSync(path.join(paperpath, paperid, "geotiff"));
+  fs.mkdirSync(path.join(paperpath, paperid, "rdata"));
+  fs.mkdirSync(path.join(paperpath, paperid, "geojson"));
 
   // TODO saving stuff into subfolders and start conversion
 
