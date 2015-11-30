@@ -94,7 +94,8 @@ app.post('/addPaper', paperupload, function(req, res) {
   fs.mkdir(path.join(paperpath, paperid, "rdata"));
   fs.mkdir(path.join(paperpath, paperid, "geojson"));
   
-  if(path.extname(req.files["texfile"][0].originalname) == '.tex'){
+  //saving the tex file
+  if(path.extname(req.files["texfile"][0].originalname) == '.tex'|| req.files["texfile"][0].originalname) == '.TeX' || req.files["texfile"][0].originalname) == '.TEX'){
     var texPath = path.join("./uploadcache/", req.files["texfile"][0].filename);
     var source = fs.createReadStream(texPath);
     var dest = fs.createWriteStream(path.join(paperpath, paperid, "tex", req.files["texfile"][0].originalname));
@@ -106,7 +107,47 @@ app.post('/addPaper', paperupload, function(req, res) {
   else{
     res.status(400).json({status:"uploaded file was not a tex file"});
   }
-  // TODO saving stuff into subfolders and start conversion
+  
+  // Saving all other files.
+  for(let fileno = 0; fileno < req.files["otherfiles"].length; fileno++) {
+    if(path.extname(req.files["otherfiles"][0].originalname) == '.rdata' || req.files["otherfiles"][0].originalname) == '.RDATA'){
+      let sourcePath = path.join("./uploadcache/", req.files["otherfiles"][0].filename);
+      let source = fs.createReadStream(sourcePath);
+      let dest = fs.createWriteStream(path.join(paperpath, paperid, "rdata", req.files["otherfiles"][0].originalname));
+
+      source.pipe(dest);
+      source.on('end', function() { /* copied */ });
+      source.on('error', function(err) { /* error */ });
+    }
+    else if(path.extname(req.files["otherfiles"][0].originalname) == '.tif' || req.files["otherfiles"][0].originalname) == '.TIF'){
+      let sourcePath = path.join("./uploadcache/", req.files["otherfiles"][0].filename);
+      let source = fs.createReadStream(sourcePath);
+      let dest = fs.createWriteStream(path.join(paperpath, paperid, "geotiff", req.files["otherfiles"][0].originalname));
+
+      source.pipe(dest);
+      source.on('end', function() { /* copied */ });
+      source.on('error', function(err) { /* error */ });
+    }
+    else if(path.extname(req.files["otherfiles"][0].originalname) == '.json' || req.files["otherfiles"][0].originalname) == '.JSON'){
+      let sourcePath = path.join("./uploadcache/", req.files["otherfiles"][0].filename);
+      let source = fs.createReadStream(sourcePath);
+      let dest = fs.createWriteStream(path.join(paperpath, paperid, "geojson", req.files["otherfiles"][0].originalname));
+
+      source.pipe(dest);
+      source.on('end', function() { /* copied */ });
+      source.on('error', function(err) { /* error */ });
+    }
+    else {
+      let sourcePath = path.join("./uploadcache/", req.files["otherfiles"][0].filename);
+      let source = fs.createReadStream(sourcePath);
+      let dest = fs.createWriteStream(path.join(paperpath, paperid, "tex", req.files["otherfiles"][0].originalname));
+
+      source.pipe(dest);
+      source.on('end', function() { /* copied */ });
+      source.on('error', function(err) { /* error */ });
+    }
+  }
+  // TODO start conversion
 
   res.status(200).json({
     status: "ok"
