@@ -95,16 +95,16 @@ app.post('/addPaper', paperupload, function(req, res) {
   fs.mkdir(path.join(paperpath, paperid, "geojson"));
   
   if(path.extname(req.files["texfile"][0].originalname) == '.tex'){
-		var texPath = path.join("./uploadcache/", req.files["texfile"][0].filename);
-		var source = fs.createReadStream(texPath);
-		var dest = fs.createWriteStream(path.join(paperpath, paperid, "tex", req.files["texfile"][0].originalname));
+    var texPath = path.join("./uploadcache/", req.files["texfile"][0].filename);
+    var source = fs.createReadStream(texPath);
+    var dest = fs.createWriteStream(path.join(paperpath, paperid, "tex", req.files["texfile"][0].originalname));
 
-		source.pipe(dest);
-		source.on('end', function() { /* copied */ });
-		source.on('error', function(err) { /* error */ });
+    source.pipe(dest);
+    source.on('end', function() { /* copied */ });
+    source.on('error', function(err) { /* error */ });
   }
   else{
-		  res.status(400).json({status:"uploaded file was not a tex file"});
+    res.status(400).json({status:"uploaded file was not a tex file"});
   }
   // TODO saving stuff into subfolders and start conversion
 
