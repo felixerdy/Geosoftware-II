@@ -30,6 +30,8 @@ $("#uploadButton").click(function() {
         $('#paperUploadModal').modal('hide');
         $('#uploadButton').removeClass("disabled");
         $('#uploadButton').html("Upload");
+        //TODO updateTable doesn't work yet after this ajax call, you still have to reload
+        updateTable();
       },
       error: function(jqxhr, textstatus, error) {
         alert("Upload failed! Reason: " + error);

@@ -68,7 +68,9 @@ app.post('/addPaper', paperupload, function(req, res) {
   });
   paper.save(function(error) {
     if (error) {
-      res.status(400).json({status:"Fail creating paper DB entry for " + req.body.title + ": " + error});
+      res.status(400).json({
+        status: "Fail creating paper DB entry for " + req.body.title + ": " + error
+      });
     }
   });
 
@@ -99,46 +101,58 @@ app.post('/addPaper', paperupload, function(req, res) {
     var dest = fs.createWriteStream(path.join(paperpath, paperid, subfolder, req.files[formname][fileno].originalname));
 
     source.pipe(dest);
-    source.on('error', function(err) { throw "Error copying file into ." + subfolder; });
+    source.on('error', function(err) {
+      throw "Error copying file into ." + subfolder;
+    });
 
     fs.unlink(path.join("./uploadcache/", req.files[formname][fileno].filename));
   }
 
   // saving the tex file
-  if( /^\.[t|T][e|E][x|X]$/.test(path.extname(req.files["texfile"][0].originalname)) ){
+  if (/^\.[t|T][e|E][x|X]$/.test(path.extname(req.files["texfile"][0].originalname))) {
     copyToIDFolder("tex", "texfile", 0);
     paper.htmlCode = path.join(paperpath, paperid, "html", path.basename(req.files["texfile"][0].originalname, path.extname(req.files["texfile"][0].originalname)) + ".html");
+
+    //TODO: finish conversion to HTML
+    //Caution: you have to install further LaTeX Packages, MikTex opens a window
+    var inputdir = path.join(paperpath, paperid, "tex");
+    var input = path.basename(req.files["texfile"][0].originalname);
+    var outputdir = path.join(paperpath, paperid, "html");
+
+    converter.convert(inputdir, input, outputdir);
+
+  } else {
+    res.status(400).json({
+      status: "uploaded file was not a tex file"
+    });
   }
-  else{
-    res.status(400).json({status:"uploaded file was not a tex file"});
-  }
-  
-  // saving all other files.
-  for(let fileno = 0; fileno < req.files["otherfiles"].length; fileno++) {
-    if( /^\.[r|R][d|D][a|A][t|T][a|A]$/.test(path.extname(req.files["otherfiles"][fileno].originalname)) ){
-      copyToIDFolder("rdata", "otherfiles", fileno);
-      paper.rData_path.push( path.join(paperpath, paperid, "rdata", req.files["otherfiles"][fileno].originalname) );
-    }
-    else if( /^\.[t|T][i|I][f|F]$/.test(path.extname(req.files["otherfiles"][fileno].originalname)) ){
-      copyToIDFolder("geotiff", "otherfiles", fileno);
-      paper.geoTiff_path.push( path.join(paperpath, paperid, "geotiff", req.files["otherfiles"][fileno].originalname) );
-    }
-    else if( /^\.[j|J][s|S][o|O][n|N]$/.test(path.extname(req.files["otherfiles"][fileno].originalname)) ){
-      copyToIDFolder("geojson", "otherfiles", fileno);
-      paper.geoJSON_path.push( path.join(paperpath, paperid, "geojson", req.files["otherfiles"][fileno].originalname) );
-    }
-    else {
-      copyToIDFolder("tex", "otherfiles", fileno);
+
+  if (req.files["otherfiles"]) {
+    // saving all other files.
+    for (let fileno = 0; fileno < req.files["otherfiles"].length; fileno++) {
+      if (/^\.[r|R][d|D][a|A][t|T][a|A]$/.test(path.extname(req.files["otherfiles"][fileno].originalname))) {
+        copyToIDFolder("rdata", "otherfiles", fileno);
+        paper.rData_path.push(path.join(paperpath, paperid, "rdata", req.files["otherfiles"][fileno].originalname));
+      } else if (/^\.[t|T][i|I][f|F]$/.test(path.extname(req.files["otherfiles"][fileno].originalname))) {
+        copyToIDFolder("geotiff", "otherfiles", fileno);
+        paper.geoTiff_path.push(path.join(paperpath, paperid, "geotiff", req.files["otherfiles"][fileno].originalname));
+      } else if (/^\.[j|J][s|S][o|O][n|N]$/.test(path.extname(req.files["otherfiles"][fileno].originalname))) {
+        copyToIDFolder("geojson", "otherfiles", fileno);
+        paper.geoJSON_path.push(path.join(paperpath, paperid, "geojson", req.files["otherfiles"][fileno].originalname));
+      } else {
+        copyToIDFolder("tex", "otherfiles", fileno);
+      }
     }
   }
 
   paper.save(function(error) {
     if (error) {
-      res.status(400).json({status:"Fail creating paper DB entry for " + req.body.title + ": " + error});
+      res.status(400).json({
+        status: "Fail creating paper DB entry for " + req.body.title + ": " + error
+      });
     }
   });
 
-  // TODO start conversion
 
   res.status(200).json({
     status: "ok"
