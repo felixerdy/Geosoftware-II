@@ -76,9 +76,9 @@ function updateTable() {
         var d = new Date(content[publication_index].publicaton_date);
         $('#paperTable').append('<tr>' +
           '<td>' + content[publication_index].author + '</td>' +
-          '<td>' + content[publication_index].title + '</a></td>' +
+          '<td><a href="paperpage.html#' + content[publication_index]._id + '">'  + content[publication_index].title + '</a></td>' +
           '<td>' + d.toISOString() + '</td>' +
-          '<td>' + content[publication_index]._id + '</td>' +
+          '<td>' + 'TODO' + '</td>' +
           '</tr>');
       }
       $("#paperTable").trigger("update");
