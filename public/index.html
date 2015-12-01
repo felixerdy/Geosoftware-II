@@ -56,7 +56,7 @@
   <div class="container" style="width: 70%; max width: 70%;">
     <div class="panel panel-default"><div class="panel-body">
       <p>Skypaper is a new way to distribute your geospatial publications. Start by searching for a publication in the table below or publish your own paper. See the documentation for information about the upload process.</p>
-      <p style="text-align: center;"><a class="btn btn-default" data-toggle="modal" data-target="#myModal">Publish</a></p>
+      <p style="text-align: center;"><a class="btn btn-default" data-toggle="modal" data-target="#paperUploadModal">Publish</a></p>
 
     </div></div>
 
@@ -395,8 +395,8 @@
     </table>
   </div>
 
- <!-- Modal -->
-  <div id="myModal" class="modal fade" role="dialog">
+  <!-- Modal -->
+  <div id="paperUploadModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
       <!-- Modal content-->
@@ -405,57 +405,52 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Publish paper</h4>
         </div>
-        <div class="modal-body">
-			<div class="row">
-			    <div class="col-md-3"><label for="title">Title:</label></div>
-				<div class="col-md-9"><input id="title" style="width: 100%;" name="title"></div>
-			</div>
-           	<br>
-			<div class="row">
-			    <div class="col-md-3"><label for="author">Author:</label></div>
-				<div class="col-md-9">  <input id="author" style="width: 100%;" name="author"></div>
-			</div>
-			<br>
-			<div class="row">
-			    <div class="col-md-3"><label for="publication_date">Date of publication:</label></div>
-				<div class="col-md-9"><input type="text" id="publication_date" class="datepicker form-control" style="width: 100%;" name="publication_date"></div>
-			</div>
-			<br>
-			<br>
-			<div class="row">
-			 <div class="col-md-3">
-			 <label class="control-label">Select.tex file</label>
-			 </div>
-			 <div class="col-md-9">
-			 <span class="btn btn-default btn-file">
-		     Browse <input type="file">
-		     </span>
-			 </div>
-			</div>
-			<br>
-		    <div class="row">
-			 <div class="col-md-3">
-			 <label class="control-label">Add data</label>
-			 </div>
-		     <div class="col-md-9">
-		     <span class="btn btn-default btn-file">
-		      Browse <input multiple type="file" data-allowed-file-extensions='["tif", "json", "Rdata"]'>
-			 </span>
-			 </div>
-		    </div>
-        </div>
+        <div class="modal-body"><form id="paperform" method="post" enctype="multipart/form-data">
+			    <div class="row">
+			      <div class="col-md-3"><label for="title">Title:</label></div>
+				    <div class="col-md-9"><input id="title" style="width: 100%;" name="title"></div>
+			    </div>
+          <br>
+			    <div class="row">
+			      <div class="col-md-3"><label for="author">Author:</label></div>
+				    <div class="col-md-9">  <input id="author" style="width: 100%;" name="author"></div>
+			    </div>
+			    <br>
+			    <div class="row">
+			      <div class="col-md-3"><label for="publication_date">Date of publication:</label></div>
+				    <div class="col-md-9"><input type="text" id="publication_date" class="datepicker form-control" style="width: 100%;" name="publication_date"></div>
+			    </div>
+			    <br><br>
+			    <div class="row">
+			      <div class="col-md-3">
+			        <label class="control-label">Select.tex file</label>
+			      </div>
+			      <div class="col-md-9">
+			        <span class="btn btn-default btn-file">Browse, i file max<input type="file" name="texfile" id="texfile"></span>
+			      </div>
+			    </div>
+			    <br>
+		      <div class="row">
+			      <div class="col-md-3">
+			        <label class="control-label">Add data</label>
+			      </div>
+		        <div class="col-md-9">
+		          <span class="btn btn-default btn-file">Browse, 50 files max<input multiple type="file" name="otherfiles" data-allowed-file-extensions='["tif", "json", "Rdata"]'></span>
+			      </div>
+		      </div>
+        </form></div>
         <div class="modal-footer">
-          <button type="button" id="uploadButton" class="btn btn-success" data-dismiss="modal">Upload</button>
+          <button type="button" id="uploadButton" class="btn btn-success">Upload</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
-
     </div>
   </div>
 
 
 
   <script>
+    // Initialize the plugin for the sorted table...
     $(function() {
       // call the tablesorter plugin and apply the uitheme widget
       $("table").tablesorter({
@@ -518,7 +513,7 @@
 
 
 
-  <script src="js/dbConnection.js"></script>
+  <script src="js/paperupload.js"></script>
 
 
 
