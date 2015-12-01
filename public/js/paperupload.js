@@ -8,8 +8,12 @@ $("#uploadButton").click(function() {
   if(! $("#uploadButton").hasClass("disabled")) {
 
     // Check if form data is complete.
-    if ($('#title').val() == "" || $('#author').val() == "" || $('#publication_date').val() == "" || $('#texfile').val() == "") {
-      alert("Data incomplete! Title, author, date and a *.tex file are required.");
+    if ( $('#title').val() == ""
+      || $('#author').val() == ""
+      || $('#publication_date').val() == ""
+      || $('#search_terms').val() == ""
+      || $('#texfile').val() == "" ) {
+      alert("Data incomplete! Title, author, date, at least one search term and a *.tex file are required.");
       return;
     }
 
