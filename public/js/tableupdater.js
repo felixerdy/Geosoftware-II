@@ -78,7 +78,7 @@ function updateTable() {
           '<td>' + content[publication_index].author + '</td>' +
           '<td><a href="paperpage.html#' + content[publication_index]._id + '">'  + content[publication_index].title + '</a></td>' +
           '<td>' + d.toISOString() + '</td>' +
-          '<td>' + 'TODO' + '</td>' +
+          '<td>' + content[publication_index].search_terms + '</td>' +
           '</tr>');
       }
       $("#paperTable").trigger("update");
