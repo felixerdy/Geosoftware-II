@@ -118,7 +118,7 @@ app.post('/addPaper', paperupload, function(req, res) {
     //Caution: you have to install further LaTeX Packages, MikTex opens a window
     var inputdir = path.join(paperpath, paperid, "tex");
     var input = path.basename(req.files["texfile"][0].originalname);
-    var outputdir = path.join(paperpath, paperid, "html");
+    var outputdir = path.join("../", "html/"); // the script needs this because it's working in tex/
 
     converter.convert(inputdir, input, outputdir);
 
@@ -154,10 +154,10 @@ app.post('/addPaper', paperupload, function(req, res) {
     }
   });
 
-
   res.status(200).json({
     status: "ok"
   });
+
 });
 
 app.get('/getPapers', function(req, res) {
