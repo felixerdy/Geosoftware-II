@@ -13,6 +13,8 @@ $(document).ready(function() {
 
         widthFixed: false,
 
+        dateFormat : "yyyymmdd", // set the default date format
+
         headerTemplate: '{content} {icon}', // new in v2.7. Needed to add the bootstrap icon!
 
         // widget code contained in the jquery.tablesorter.widgets.js file
@@ -75,7 +77,7 @@ function updateTable() {
       for (var publication_index = 0; publication_index < content.length; publication_index++) {
         var d = new Date(content[publication_index].publicaton_date);
         var y = d.getFullYear();
-        var m = d.getMonth() + 1;
+        var m = d.getMonth() + 1; // 0 - 11
         var t = d.getDate();
         $('#paperTable').append('<tr>' +
           '<td>' + content[publication_index].author + '</td>' +
