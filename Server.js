@@ -78,7 +78,7 @@ app.post('/addPaper', paperupload, function(req, res) {
 
   // Create project folders.
   var paperid = paper._id.toString();
-  var paperpath = path.join(process.cwd() ,"/papers");
+  var paperpath = path.join(process.cwd(), "/papers");
 
   // the papers folder
   // fs.exists - > Deprecated!!! maybe stats.isDirectory()
@@ -166,6 +166,18 @@ app.get('/getPapers', function(req, res) {
       res.end();
     }
   });
+});
+
+app.get('/getPaperById', function(req, res) {
+  //TODO: is there a more elegant way than substring?
+  Paper.findById(req.url.substring(22, req.url.length), function(err, value) {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.json(value);
+      res.end();
+    }
+  })
 });
 
 
