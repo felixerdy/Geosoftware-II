@@ -60,7 +60,7 @@ $(document).ready(function() {
   $('.datepicker').datepicker({
     startView: 1,
     todayBtn: true,
-    format: 'yyyy/mm/dd',
+    format: 'yyyy/mm/dd'
   });
 });
 
@@ -74,10 +74,13 @@ function updateTable() {
       $('#paperTable tr').remove();
       for (var publication_index = 0; publication_index < content.length; publication_index++) {
         var d = new Date(content[publication_index].publicaton_date);
+        var y = d.getFullYear();
+        var m = d.getMonth() + 1;
+        var t = d.getDate();
         $('#paperTable').append('<tr>' +
           '<td>' + content[publication_index].author + '</td>' +
           '<td><a href="paperpage.html#' + content[publication_index]._id + '">'  + content[publication_index].title + '</a></td>' +
-          '<td>' + d.toISOString() + '</td>' +
+          '<td>' + y + '-' + m + '-' + t + '</td>' +
           '<td>' + content[publication_index].search_terms + '</td>' +
           '</tr>');
       }
