@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/theme.bootstrap.css">
+  <link rel="stylesheet" href="js/bs-datepicker/css/bootstrap-datepicker3.standalone.css">
+  <link rel="stylesheet" href="css/jquery.tablesorter.pager.css">
+  <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+  <script src="js/bs-datepicker/js/bootstrap-datepicker.min.js"></script>
+  <!--<script src="js/bs-datepicker/js/locales/bootstrap-datepicker.en-GB.min.js" charset="UTF-8"></script>-->
+  <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+  <script src="js/jquery.tablesorter.js"></script>
+  <script src="js/jquery.tablesorter.widgets.js"></script>
+  <script src="js/jquery.tablesorter.pager.js"></script>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <!--
+        <a class="navbar-brand" href="index.html">
+          <img src="images/icon.png" alt="Skypaper" style="height: 20px;">
+        </a>
+      -->
+      </div>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li class="active">
+            <a href="#">
+              <img src="images/icon_transparent.png" alt="Skypaper" style="height: 20px;"> Start
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li><a href="documentation.html">Documentation</a></li>
+        </ul>
+
+      </div>
+      <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+  </nav>
+
+
+  <div class="container" style="width: 70%; max width: 70%;">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <p>Skypaper is a new way to distribute your geospatial publications. Start by searching for a publication in the table below or publish your own paper. See the documentation for information about the upload process.</p>
+        <p style="text-align: center;"><a class="btn btn-default" data-toggle="modal" data-target="#paperUploadModal">Publish</a></p>
+
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="container-fluid" style="width: 70%; max width: 70%">
+    <table>
+      <!-- bootstrap classes added by the uitheme widget -->
+      <!--table head -->
+      <thead>
+        <tr>
+          <th>Author</th>
+          <th>Title</th>
+          <th>Date of publication</th>
+          <th>Search term</th>
+      </thead>
+      <!--table footer -->
+      <tfoot>
+        <tr>
+
+          <th colspan="7" class="ts-pager form-horizontal tablesorter-pager">
+            <button type="button" class="btn first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
+            <button type="button" class="btn prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
+            <span class="pagedisplay"></span>
+            <!-- this can be any element, including an input -->
+            <button type="button" class="btn next"><i class="icon-arrow-right glyphicon glyphicon-forward"></i></button>
+            <button type="button" class="btn last"><i class="icon-step-forward glyphicon glyphicon-step-forward"></i></button>
+            <select class="pagesize input-mini" title="Select page size">
+              <option selected="selected" value="10">10</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+            </select>
+            <!--<select class="pagenum input-mini" title="Select page number"></select>-->
+          </th>
+        </tr>
+      </tfoot>
+      <tbody id="paperTable">
+        <!-- content of paperTable -->
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal -->
+  <div id="paperUploadModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Publish paper</h4>
+        </div>
+        <div class="modal-body">
+          <form id="paperform" method="post" enctype="multipart/form-data">
+            <div class="row">
+              <div class="col-md-3">
+                <label for="title">Title:</label>
+              </div>
+              <div class="col-md-9">
+                <input id="title" style="width: 100%;" name="title">
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-3">
+                <label for="author">Author:</label>
+              </div>
+              <div class="col-md-9">
+                <input id="author" style="width: 100%;" name="author">
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-3">
+                <label for="author">Search terms: (separated by comma and space)</label>
+              </div>
+              <div class="col-md-9">
+                <input id="search_terms" style="width: 100%;" name="search_terms">
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-3">
+                <label for="publication_date">Date of publication:</label>
+              </div>
+              <div class="col-md-9">
+                <input type="text" id="publication_date" class="datepicker form-control" style="width: 100%;" name="publication_date">
+              </div>
+            </div>
+            <br>
+            <br>
+            <div class="row">
+              <div class="col-md-3">
+                <label class="control-label">Select.tex file</label>
+              </div>
+              <div class="col-md-9">
+                <span class="btn btn-default btn-file">Browse..., 1 file max
+                  <input type="file" name="texfile" id="texfile" accept=".tex">
+                </span>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-3">
+                <label class="control-label">Add data</label>
+              </div>
+              <div class="col-md-9">
+                <span class="btn btn-default btn-file">Browse..., 50 files max
+                  <input multiple type="file" name="otherfiles" accept=".tif, .json, .Rdata, .jpg, .jpeg, .png, .pdf">
+                </span>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="uploadButton" class="btn btn-success">Upload</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="js/paperupload.js"></script>
+  <script src="js/tableupdater.js"></script>
+
+
+
+</body>
+
+</html>

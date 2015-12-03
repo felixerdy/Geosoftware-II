@@ -18,14 +18,6 @@ var WMSOverlay = L.tileLayer.wms("http://localhost:9000/geoserver/cite/wms", {
   zIndex: 1.0
 }).addTo(map);
 
-var WMSOverlay2 = L.tileLayer.wms("http://localhost:9000/geoserver/nurc/wms", {
-  layers: 'nurc:Img_Sample',
-  format: 'image/png',
-  transparent: true,
-  attribution: "sattelite usa map",
-  zIndex: 0.0
-}).addTo(map);
-
 var baseMaps = {
     "Grayscale": basemap
 };
