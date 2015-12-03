@@ -61,7 +61,7 @@ app.post('/addPaper', paperupload, function(req, res) {
     title: req.body.title,
     author: req.body.author,
     publicaton_date: req.body.publication_date,
-    search_terms: req.body.search_terms,
+    search_terms: req.body.search_terms.split(", "),
     htmlCode: "",
     geoTiff_path: [],
     rData_path: [],
@@ -77,7 +77,7 @@ app.post('/addPaper', paperupload, function(req, res) {
 
   // Create project folders.
   var paperid = paper._id.toString();
-  var paperpath = "./papers";
+  var paperpath = path.join(process.cwd() ,"/papers");
 
   // the papers folder
   // fs.exists - > Deprecated!!! maybe stats.isDirectory()
@@ -118,7 +118,7 @@ app.post('/addPaper', paperupload, function(req, res) {
     //Caution: you have to install further LaTeX Packages, MikTex opens a window
     var inputdir = path.join(paperpath, paperid, "tex");
     var input = path.basename(req.files["texfile"][0].originalname);
-    var outputdir = path.join(paperpath, paperid, "html");
+    var outputdir = path.join(paperpath, paperid, "html/"); // the script needs this because it's working in tex/
 
     converter.convert(inputdir, input, outputdir);
 
@@ -154,10 +154,10 @@ app.post('/addPaper', paperupload, function(req, res) {
     }
   });
 
-
   res.status(200).json({
     status: "ok"
   });
+
 });
 
 app.get('/getPapers', function(req, res) {
