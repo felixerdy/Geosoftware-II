@@ -61,7 +61,7 @@ app.post('/addPaper', paperupload, function(req, res) {
     title: req.body.title,
     author: req.body.author,
     publicaton_date: req.body.publication_date,
-    search_terms: req.body.search_terms,
+    search_terms: req.body.search_terms.split(", "),
     htmlCode: "",
     geoTiff_path: [],
     rData_path: [],
