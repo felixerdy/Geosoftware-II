@@ -6,6 +6,7 @@ var mongo = require('mongodb');
 var mongoose = require('mongoose');
 var path = require('path');
 var fs = require('fs');
+var fsextra = require('fs-extra');
 
 var app = express();
 var upload = multer({
@@ -86,10 +87,8 @@ app.post('/addPaper', paperupload, function(req, res) {
   }
   // the project folder
   fs.mkdirSync(path.join(paperpath, paperid));
-  // the path for unprocessed tex files and related images
+  // the path for unprocessed tex files and related images as well for the result
   fs.mkdir(path.join(paperpath, paperid, "tex"));
-  // the output path
-  fs.mkdir(path.join(paperpath, paperid, "html"));
   // the special content paths
   fs.mkdir(path.join(paperpath, paperid, "geotiff"));
   fs.mkdir(path.join(paperpath, paperid, "rdata"));
@@ -97,30 +96,19 @@ app.post('/addPaper', paperupload, function(req, res) {
 
   // a helper function to move files into the specific papers directory
   function copyToIDFolder(subfolder, formname, fileno) {
-    var sourcePath = path.join("./uploadcache/", req.files[formname][fileno].filename);
-    var source = fs.createReadStream(sourcePath);
-    var dest = fs.createWriteStream(path.join(paperpath, paperid, subfolder, req.files[formname][fileno].originalname));
+    var sourcePath = path.join(process.cwd(), "/uploadcache/", req.files[formname][fileno].filename);
+    var destPath = path.join(paperpath, paperid, subfolder, req.files[formname][fileno].originalname);
 
-    source.pipe(dest);
-    source.on('error', function(err) {
-      throw "Error copying file into ." + subfolder;
-    });
-
-    fs.unlink(path.join("./uploadcache/", req.files[formname][fileno].filename));
+    // since moveSync isn't implemented yet...
+    fsextra.copySync(sourcePath, destPath);
+    fs.unlink(sourcePath);
   }
 
   // saving the tex file
   if (/^\.[t|T][e|E][x|X]$/.test(path.extname(req.files["texfile"][0].originalname))) {
     copyToIDFolder("tex", "texfile", 0);
-    paper.htmlCode = path.join(paperpath, paperid, "html", path.basename(req.files["texfile"][0].originalname, path.extname(req.files["texfile"][0].originalname)) + ".html");
+    paper.htmlCode = path.join(paperpath, paperid, "tex", path.basename(req.files["texfile"][0].originalname, path.extname(req.files["texfile"][0].originalname)) + ".html");
 
-    //TODO: finish conversion to HTML
-    //Caution: you have to install further LaTeX Packages, MikTex opens a window
-    var inputdir = path.join(paperpath, paperid, "tex");
-    var input = path.basename(req.files["texfile"][0].originalname);
-    var outputdir = path.join(paperpath, paperid, "html/"); // the script needs this because it's working in tex/
-
-    converter.convert(inputdir, input, outputdir);
 
   } else {
     res.status(400).json({
@@ -153,6 +141,13 @@ app.post('/addPaper', paperupload, function(req, res) {
       });
     }
   });
+
+  //TODO: finish conversion to HTML
+  //Caution: you have to install further LaTeX Packages, MikTex opens a window
+  var inputdir = path.join(paperpath, paperid, "tex");
+  var input = path.basename(req.files["texfile"][0].originalname);
+
+  converter.convert(inputdir, input);
 
   res.status(200).json({
     status: "ok"
