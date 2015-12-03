@@ -5,7 +5,7 @@
  */
 
 // takes an input path, the input filename and an output path
-exports.convert = function(inputdir, input, outputdir) {
+exports.convert = function(inputdir, input) {
  
   // store the current working directory
   // then switch to the input dir to prevent htlatex from cluttering the main directory
@@ -14,10 +14,10 @@ exports.convert = function(inputdir, input, outputdir) {
 
   // start htlatex with the input file and the output directory
   var spawn   = require('child_process').spawn,
-      htlatex = spawn("htlatex", [input, "", "", "-d" + outputdir]);
+      htlatex = spawn("htlatex", [input, "", "-interaction=nonstopmode"]);
 
   htlatex.on('exit', function(code) {
-    //console.log("Finished htlatex with " + code);
+    console.log("Finished htlatex with " + code);
   });
 
   // restore working directory
@@ -25,6 +25,4 @@ exports.convert = function(inputdir, input, outputdir) {
 
   // TODO: additional processing (replacing special stuff like references to RDATA files with regexes)
   // TODO: catching errors
-  // TODO: supporting more than only Ubuntu 14.04 LTS by allowing other htlatex paths than PATH
-  //       Alternative: Document that htlatex must be in PATH.
 }
