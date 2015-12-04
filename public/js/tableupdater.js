@@ -75,7 +75,7 @@ function updateTable() {
     success: function(content, textStatus) {
       $('#paperTable tr').remove();
       for (var publication_index = 0; publication_index < content.length; publication_index++) {
-        let d = new Date(content[publication_index].publicaton_date);
+        var d = new Date(content[publication_index].publicaton_date);
         //let y = d.getFullYear();
         //let m = d.getMonth() + 1; // 0 - 11
         //let t = d.getDate();
