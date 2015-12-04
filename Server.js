@@ -62,7 +62,7 @@ app.post('/addPaper', paperupload, function(req, res) {
     title: req.body.title,
     author: req.body.author,
     publicaton_date: req.body.publication_date,
-    search_terms: req.body.search_terms.split(", "),
+    search_terms: req.body.search_terms,
     htmlCode: "",
     geoTiff_path: [],
     rData_path: [],
@@ -169,8 +169,7 @@ app.get('/getPapers', function(req, res) {
 });
 
 app.get('/getPaperById', function(req, res) {
-  //TODO: is there a more elegant way than substring?
-  Paper.findById(req.url.substring(22, req.url.length), function(err, value) {
+  Paper.findById(req.query.id, function(err, value) {
     if (err) {
       res.status(400).send(err);
     } else {
