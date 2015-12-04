@@ -34,6 +34,7 @@ database.on('error', function(error) {
 // Serve static pages...
 app.use(express.static('./public'));
 
+
 // Adds CORS-string into the header of each response.
 // Also returns to all requests to avoid connection time-outs.
 app.use(function(req, res, next) {
@@ -93,6 +94,9 @@ app.post('/addPaper', paperupload, function(req, res) {
   fs.mkdir(path.join(paperpath, paperid, "geotiff"));
   fs.mkdir(path.join(paperpath, paperid, "rdata"));
   fs.mkdir(path.join(paperpath, paperid, "geojson"));
+  
+  app.use(express.static(path.join(paperpath, paperid, "tex")));
+  
 
   // a helper function to move files into the specific papers directory
   function copyToIDFolder(subfolder, formname, fileno) {
