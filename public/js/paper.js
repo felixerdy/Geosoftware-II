@@ -14,7 +14,26 @@ $(document).ready(function() {
     
     var iframeurl = data.htmlCode;
     iframeurl = iframeurl.split("/tex/");
+    
+    $('#paperframe').load(function() {
+
+      //replace tags: 
+      //current tag form "[...] :!:myData.tif [...]"
+      var positions = []; //array for indices of the tags occurrence
+      var includedData = []; //array for names of the includedData (e.g.: ::myData.tif)
+
+      var regexp = /:!:([^\s]+)\s/g;	//regular expression for current tagForm 
+      var tempHtml = $('#paperframe').contents().find('html').html();
+	    tempHtml = tempHtml.replace(regexp, "</p><div class='replaceable' id='$1'></div><p class='ltx_p'>"); 		
+
+      //set content of iframe to new html 
+      var iframe = document.getElementById('paperframe');
+      var iframedoc = iframe.contentDocument || iframe.contentWindow.document;
+      iframedoc.body.innerHTML = tempHtml; 
+    });
+
     $('#paperframe')[0].src = iframeurl[1];
-  },
-  'json');
+
+	}, 'json');
+	
 });
