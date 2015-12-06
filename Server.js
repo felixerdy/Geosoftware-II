@@ -184,6 +184,20 @@ app.get('/getPaperById', function(req, res) {
 });
 
 
+// prepare already available directories for serving
+Paper.find({}, function(error, values) {
+  if (error) {
+    var message = "DB error: " + error;
+    console.log(message);
+  } else {
+    for(let val = 0; val < values.length; val++) {
+      app.use(express.static(path.dirname(values[val].htmlCode)));
+      console.log(values[val].htmlCode);
+    }
+  }
+});
+
+
 // finally start the server
 app.listen(webPort, function() {
   console.log('http server now running on port ' + webPort);
