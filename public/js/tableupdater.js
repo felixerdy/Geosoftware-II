@@ -67,8 +67,11 @@ $(document).ready(function() {
 });
 
 function updateTable() {
+
+  // polyfill from http://stackoverflow.com/questions/1420881/how-to-extract-base-url-from-a-string-in-javascript
+  if (typeof location.origin === 'undefined') location.origin = location.protocol + '//' + location.host;
   $.ajax({
-    url: 'http://localhost:8080/getPapers',
+    url: location.origin + '/getPapers',
     type: 'GET',
     dataType: 'JSON',
     timeout: 10000,
