@@ -8,6 +8,7 @@
   "dependencies": {
     "bootstrap-datepicker": "~1.5.0",
     "jquery": "~2.1.4",
+    "bootstrap": "~3.3.5",
     "leaflet": "~0.7.7",
     "tablesorter": "jquery.tablesorter#~2.24.6"
   }
