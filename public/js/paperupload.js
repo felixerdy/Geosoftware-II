@@ -24,9 +24,11 @@ $("#uploadButton").click(function() {
     // Send data...
     var formData = new FormData($("#paperform")[0]);
 
+    // polyfill from http://stackoverflow.com/questions/1420881/how-to-extract-base-url-from-a-string-in-javascript
+    if (typeof location.origin === 'undefined') location.origin = location.protocol + '//' + location.host;
 
     $.ajax({
-      url: 'http://localhost:8080/addPaper',
+      url: location.origin + '/addPaper',
       type: 'POST',
       data: formData,
       success: function() {

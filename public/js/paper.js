@@ -3,7 +3,10 @@ $(document).ready(function() {
   var url = window.location.href;
   var id = url.substring(url.lastIndexOf('#') + 1);
 
-  $.get('http://localhost:8080/getPaperById', {'id' : id}, function(data, textStatus, jqXHR) {
+  // polyfill from http://stackoverflow.com/questions/1420881/how-to-extract-base-url-from-a-string-in-javascript
+  if (typeof location.origin === 'undefined') location.origin = location.protocol + '//' + location.host;
+
+  $.get(location.origin + '/getPaperById', {'id' : id}, function(data, textStatus, jqXHR) {
     $('#papertitle').append(data.title);
     var d = new Date(data.publicaton_date);
     //let y = d.getFullYear();

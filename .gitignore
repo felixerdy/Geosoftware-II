@@ -31,6 +31,8 @@ node_modules
 uploadcache
 # the paper folder
 papers
+#js-import stuff
+public/js/bowerstuff
 
 # Optional npm cache directory
 .npm
