@@ -7,8 +7,6 @@ $(document).ready(function() {
   if (typeof location.origin === 'undefined') location.origin = location.protocol + '//' + location.host;
   
   $.get(location.origin + '/getPaperById', {'id' : id}, function(data, textStatus, jqXHR) {
-    'id': id
-  }, function(data, textStatus, jqXHR) {
     $('#papertitle').append(data.title);
     var d = new Date(data.publicaton_date);
     $('#paperdate').append(('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth() + 1)).slice(-2) + '/' + d.getFullYear());
