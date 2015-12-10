@@ -4,7 +4,7 @@
  * @desc Converts a LaTeX file into HTML using latexml and does some additional conversations.
  */
 
-exports.convert = function(inputdir, input) {
+exports.convert = function(inputdir, input, paper) {
   var path = require("path");
   var fs = require('fs');
 
@@ -20,6 +20,12 @@ exports.convert = function(inputdir, input) {
   latexml.on('exit', function(code) {
     console.log("Step 1: latexml finished, returning " + code);
 
+    if(code != 0) {
+      paper.processing_state = -1;
+      paper.save(function(error) {});
+      return;
+    }
+
     process.chdir(inputdir);
 
     // start latexmlpost
@@ -27,20 +33,38 @@ exports.convert = function(inputdir, input) {
     lmlpost.on('exit', function(code) {
       console.log("Step 2: latexmlpost finished, returning " + code);
 
+      if(code != 0) {
+        paper.processing_state = -2;
+        paper.save(function(error) {});
+        return;
+      }
+
       process.chdir(currentwdir);
 
       // inject script tags
-      var htmlData = fs.readFileSync(path.join(inputdir, path.basename(input, ".tex") + ".html"), "utf-8");
+      try {
+        var htmlData = fs.readFileSync(path.join(inputdir, path.basename(input, ".tex") + ".html"), "utf-8");
 
-      htmlData = htmlData.replace('<head>',
-        '<head><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />' +
-        '<script src="http://code.jquery.com/jquery-1.11.3.min.js">' +
-        '</script><script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>' +
-        '<script src="/js/iframe.js"></script>');
+        htmlData = htmlData.replace('<head>',
+          '<head><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />' +
+          '<script src="http://code.jquery.com/jquery-1.11.3.min.js">' +
+          '</script><script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>' +
+          '<script src="/js/iframe.js"></script>');
 
-      fs.writeFileSync(path.join(inputdir, path.basename(input, ".tex") + ".html"), htmlData);
+        fs.writeFileSync(path.join(inputdir, path.basename(input, ".tex") + ".html"), htmlData);
 
-      console.log("Step 3: injecting script tags finished");
+        console.log("Step 3: injecting script tags finished");
+      }
+      catch(e) {
+        paper.processing_state = -3;
+        paper.save(function(error) {});
+        return;
+      }
+
+      // saving that the conversion was succesful
+      paper.processing_state = 1;
+      paper.save(function(error) {});
+      return;
 
     });
 

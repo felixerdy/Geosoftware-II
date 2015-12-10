@@ -138,6 +138,9 @@ app.post('/addPaper', paperupload, function(req, res) {
     }
   }
 
+  // set the state to 0, meaning "unprocessed"
+  paper.processing_state = 0;
+
   paper.save(function(error) {
     if (error) {
       res.status(400).json({
@@ -149,7 +152,7 @@ app.post('/addPaper', paperupload, function(req, res) {
   var inputdir = path.join(paperpath, paperid, "tex");
   var input = path.basename(req.files["texfile"][0].originalname);
 
-  converter.convert(inputdir, input);
+  converter.convert(inputdir, input, paper);
 
   res.status(200).json({
     status: "ok"
