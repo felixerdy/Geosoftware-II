@@ -40,13 +40,14 @@
   </nav>
 
   <div class="container">
-    <h1 id="papertitle">...</h1>
-    <h3 id="paperdate" style="text-align: right;">...</h3>
-    <h4 id="paperauthor">...</h4>
-    <div class="panel panel-default"><div class="panel-body">
+    <h1 id="papertitle"></h1>
+    <h3 id="paperdate" style="text-align: right;"></h3>
+    <h4 id="paperauthor"></h4>
+    <div class="panel panel-default"><div style="margin:0px;padding:0px;overflow:hidden" class="panel-body">
     <!-- Maps get embedded in the embedded pages -->
     <!--div id="map" style="height: 400px"></div-->
-      <iframe id="paperframe" style="border-style: none;"></iframe>
+
+      <div class="embed-responsive embed-responsive-16by9"><iframe id="paperframe" class="embed-responsive-item"></iframe></div>
     </div></div>
     <button type="button" class="btn first" id="papereditbutton">Edit Paper Submission</button>
   </div>
@@ -54,18 +55,8 @@
   <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
-  <script src="js/map.js"></script>
+  <script src="js/paper.js"></script>
 
-  <script>
-    // snippet how to load the iframe stuff
-    // a la blablub.de/paperpage.html#paperidorsomething
-    if(window.location.hash) {
-      // load iframe html
-    }
-    else {
-      // that should never happen...
-    }
-  </script>
 
 </body>
 
