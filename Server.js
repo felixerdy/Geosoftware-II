@@ -146,8 +146,6 @@ app.post('/addPaper', paperupload, function(req, res) {
     }
   });
 
-  //TODO: finish conversion to HTML
-  //Caution: you have to install further LaTeX Packages, MikTex opens a window
   var inputdir = path.join(paperpath, paperid, "tex");
   var input = path.basename(req.files["texfile"][0].originalname);
 
@@ -192,7 +190,6 @@ Paper.find({}, function(error, values) {
   } else {
     for(let val = 0; val < values.length; val++) {
       app.use(express.static(path.dirname(values[val].htmlCode)));
-      console.log(values[val].htmlCode);
     }
   }
 });
@@ -200,5 +197,5 @@ Paper.find({}, function(error, values) {
 
 // finally start the server
 app.listen(webPort, function() {
-  console.log('http server now running on port ' + webPort);
+  console.log('SkyPaper server now running on port ' + webPort + '!');
 });
