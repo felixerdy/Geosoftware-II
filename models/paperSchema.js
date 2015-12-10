@@ -5,7 +5,7 @@ var paperSchema = new Schema({
   title: String,
   author: String,
   publicaton_date: Date,
-  search_terms: String,
+  search_terms: [String],
   htmlCode: String,
   geoTiff_path: [String],
   rData_path: [String],
@@ -13,4 +13,4 @@ var paperSchema = new Schema({
 });
 
 var Paper = mongoose.model('Paper', paperSchema);
-module.exports = Paper; 
+module.exports = Paper;
