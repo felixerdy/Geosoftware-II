@@ -79,15 +79,19 @@ function updateTable() {
       $('#paperTable tr').remove();
       for (var publication_index = 0; publication_index < content.length; publication_index++) {
         var d = new Date(content[publication_index].publicaton_date);
-        //let y = d.getFullYear();
-        //let m = d.getMonth() + 1; // 0 - 11
-        //let t = d.getDate();
+        
+        var stateMessage = "";
+        if(content[publication_index].processing_state < 1) {
+          stateMessage = (content[publication_index].processing_state < 0 ? " (conversion error: " + content[publication_index].processing_state + ")" : " (processing... please reload)");
+        }
+
         $('#paperTable').append('<tr>' +
           '<td>' + content[publication_index].author + '</td>' +
-          '<td><a href="paperpage.html#' + content[publication_index]._id + '">'  + content[publication_index].title + '</a></td>' +
+          '<td><a href="paperpage.html#' + content[publication_index]._id + '">'  + content[publication_index].title + stateMessage + '</a></td>' +
           '<td>' + ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth()+1)).slice(-2) + '/' + d.getFullYear() + '</td>' +
           '<td>' + content[publication_index].search_terms + '</td>' +
           '</tr>');
+
       }
       $("#paperTable").trigger("update");
     },
