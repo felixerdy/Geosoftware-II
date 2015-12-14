@@ -1,6 +1,7 @@
 "use strict"
 
 var maps = [];
+var plots = [];
 
 /**
  * @returns the layer object, optional
@@ -15,6 +16,8 @@ function createBaseLayer(map) {
   }).addTo(map);
 }
 
+
+
 function createGJSONLayer(map, url) {
 
   $.getJSON(url, function(data) {
@@ -25,6 +28,7 @@ function createGJSONLayer(map, url) {
         $.each(propertiesJSON, function(k, v) {
           temp += k + ': ' + v;
         });
+        layer.bindPopup(temp);
       }
     });
 
@@ -54,14 +58,29 @@ $(document).ready(function() {
   $('.replaceable').each(function(index, element) {
     var elementID = element.getAttribute('id');
     var dataID = element.getAttribute('dataid');
+
     if (/^.*\.[t|T][i|I][f|F]$/.test(dataID)) {
       maps.push( L.map(elementID).setView([51.505, -0.09], 3) );
       createBaseLayer( maps[maps.length - 1] );
 
     } else if (/^.*\.[r|R][d|D][a|A][t|T][a|A]$/.test(dataID)) {
 
+      $.plot('#' + elementID, [ [[0, 0], [1, 1]] ],
+          { yaxis: { max: 1 },
+              zoom: {
+                  interactive: true},
+              pan: {
+                  interactive: true
+              },series: {
+              lines: {
+                  show: true
+              },
+              points: {
+                  show: true
+              }
+          } });
 
-      alert("div found .rdata data");
+
 
 
     } else if (/^.*\.[j|J][s|S][o|O][n|N]$/.test(dataID)) {

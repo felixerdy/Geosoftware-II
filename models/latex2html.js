@@ -47,9 +47,12 @@ exports.convert = function(inputdir, input, paper) {
 
         htmlData = htmlData.replace('<head>',
           '<head><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />' +
-          '<script src="http://code.jquery.com/jquery-1.11.3.min.js">' +
-          '</script><script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>' +
-          '<script src="/js/iframe.js"></script>');
+          '<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>' +
+          '<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>' +
+          '<script src="/js/iframe.js"></script>' +
+          '<script src="/js/bowerstuff/Flot/jquery.flot.js"></script>' +
+          '<script src="/js/bowerstuff/Flot/jquery.flot.navigate.js"></script>' +
+          '<script src="/js/bowerstuff/Flot/jquery.flot.resize.js"></script>');
 
         fs.writeFileSync(path.join(inputdir, path.basename(input, ".tex") + ".html"), htmlData);
 
