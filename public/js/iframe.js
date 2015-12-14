@@ -20,7 +20,11 @@ function createGJSONLayer(map, url) {
   $.getJSON(url, function(data) {
     var geojson = L.geoJson(data, {
       onEachFeature: function (feature, layer) {
-        layer.bindPopup(feature.properties.name);
+        var temp = '';
+        var propertiesJSON = feature.properties;
+        $.each(propertiesJSON, function(k, v) {
+          temp += k + ': ' + v;
+        });
       }
     });
 
