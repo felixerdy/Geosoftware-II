@@ -90,7 +90,7 @@ app.post('/addPaper', paperupload, function(req, res) {
   fs.mkdir(path.join(paperpath, paperid, "geotiff"));
   fs.mkdir(path.join(paperpath, paperid, "rdata"));
   fs.mkdir(path.join(paperpath, paperid, "geojson"));
-  
+
   // a helper function to move files into the specific papers directory
   function copyToIDFolder(subfolder, formname, fileno) {
     var sourcePath = path.join(process.cwd(), "/uploadcache/", req.files[formname][fileno].filename);
@@ -119,6 +119,15 @@ app.post('/addPaper', paperupload, function(req, res) {
       if (/^\.[r|R][d|D][a|A][t|T][a|A]$/.test(path.extname(req.files["otherfiles"][fileno].originalname))) {
         copyToIDFolder("rdata", "otherfiles", fileno);
         paper.rData_path.push(path.join(paperpath, paperid, "rdata", req.files["otherfiles"][fileno].originalname));
+
+
+        // only working with zoo files
+        var spawn = require('child_process').spawn;
+        var rConvert = spawn("Rscript", ["--vanilla", process.cwd() + '/zooToCSV.R', path.join(paperpath, paperid, "rdata", req.files["otherfiles"][fileno].originalname)]);
+        rConvert.on('exit', function(code) {
+          console.log('Zoo to CSV finished, returning ' + code);
+        })
+
       } else if (/^\.[t|T][i|I][f|F]$/.test(path.extname(req.files["otherfiles"][fileno].originalname))) {
         copyToIDFolder("geotiff", "otherfiles", fileno);
         paper.geoTiff_path.push(path.join(paperpath, paperid, "geotiff", req.files["otherfiles"][fileno].originalname));
