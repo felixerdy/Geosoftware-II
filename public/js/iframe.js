@@ -64,8 +64,8 @@ $(document).ready(function() {
       createBaseLayer(maps[maps.length - 1]);
 
     } else if (/^.*\.[r|R][d|D][a|A][t|T][a|A]$/.test(dataID)) {
-
-      $.get("../rdata/" + dataID.split('.Rdata')[0] + '.csv', function(data) {
+      var regEx = new RegExp('.[r|R][d|D][a|A][t|T][a|A]');
+      $.get("../rdata/" + dataID.replace(regEx, 'csv'), function(data) {
         var csv = data;
         var lines = csv.split("\n");
         var result = [];
