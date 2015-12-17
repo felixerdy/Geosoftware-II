@@ -17,7 +17,6 @@ function createBaseLayer(map) {
 }
 
 
-
 function createGJSONLayer(map, url) {
 
   $.getJSON(url, function(data) {
@@ -34,7 +33,8 @@ function createGJSONLayer(map, url) {
 
     geojson.addTo(map);
     map.fitBounds(geojson.getBounds());
-  });
+  }).error(function() {console.log("JSON file not found, maybe rdata was load with unsupported object type") });
+ 
 
 }
 
@@ -65,7 +65,12 @@ $(document).ready(function() {
 
     } else if (/^.*\.[r|R][d|D][a|A][t|T][a|A]$/.test(dataID)) {
       var regEx = new RegExp('.[r|R][d|D][a|A][t|T][a|A]');
-      $.get("../rdata/" + dataID.replace(regEx, 'csv'), function(data) {
+      var csvFound = false; 
+      $.ajax({
+        url: "../rdata/" + dataID.replace(regEx, '.csv'), 
+        type: 'GET',
+        success: function(data) {
+        csvFound = true; 
         var csv = data;
         var lines = csv.split("\n");
         var result = [];
@@ -109,17 +114,27 @@ $(document).ready(function() {
             }
           }
         });
-      });
-
-
-
+        
+      }
+    });
+    
+      // if csv not found, json is only left supported format. error handling in createGJSONLayer $getJSON
+      if(csvFound == false){
+        jsonToMap("../rdata/" + dataID.replace(regEx, '.json'));
+      } 
+        
+  
     } else if (/^.*\.[j|J][s|S][o|O][n|N]$/.test(dataID)) {
 
 
+      jsonToMap("../geojson/" + dataID); 
+
+    }
+    
+    function jsonToMap(jsonPath){
       maps.push(L.map(elementID).setView([51.505, -0.09], 3));
       createBaseLayer(maps[maps.length - 1]);
-      createGJSONLayer(maps[maps.length - 1], "../geojson/" + dataID);
-
+      createGJSONLayer(maps[maps.length - 1], jsonPath);    
     }
   });
 });
