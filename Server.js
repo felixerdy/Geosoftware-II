@@ -31,10 +31,6 @@ database.on('error', function(error) {
 });
 
 
-// Serve static pages...
-app.use(express.static('./public'));
-
-
 // Adds CORS-string into the header of each response.
 // Also returns to all requests to avoid connection time-outs.
 app.use(function(req, res, next) {
@@ -94,9 +90,6 @@ app.post('/addPaper', paperupload, function(req, res) {
   fs.mkdir(path.join(paperpath, paperid, "geotiff"));
   fs.mkdir(path.join(paperpath, paperid, "rdata"));
   fs.mkdir(path.join(paperpath, paperid, "geojson"));
-  
-  app.use(express.static(path.join(paperpath, paperid, "tex")));
-  
 
   // a helper function to move files into the specific papers directory
   function copyToIDFolder(subfolder, formname, fileno) {
@@ -126,6 +119,15 @@ app.post('/addPaper', paperupload, function(req, res) {
       if (/^\.[r|R][d|D][a|A][t|T][a|A]$/.test(path.extname(req.files["otherfiles"][fileno].originalname))) {
         copyToIDFolder("rdata", "otherfiles", fileno);
         paper.rData_path.push(path.join(paperpath, paperid, "rdata", req.files["otherfiles"][fileno].originalname));
+
+
+        // only working with zoo files
+        var spawn = require('child_process').spawn;
+        var rConvert = spawn("Rscript", ["--vanilla", process.cwd() + '/RDataConversion.R', path.join(paperpath, paperid, "rdata", req.files["otherfiles"][fileno].originalname)]);
+        rConvert.on('exit', function(code) {
+          console.log('Zoo to CSV finished, returning ' + code);
+        })
+
       } else if (/^\.[t|T][i|I][f|F]$/.test(path.extname(req.files["otherfiles"][fileno].originalname))) {
         copyToIDFolder("geotiff", "otherfiles", fileno);
         paper.geoTiff_path.push(path.join(paperpath, paperid, "geotiff", req.files["otherfiles"][fileno].originalname));
@@ -138,6 +140,9 @@ app.post('/addPaper', paperupload, function(req, res) {
     }
   }
 
+  // set the state to 0, meaning "unprocessed"
+  paper.processing_state = 0;
+
   paper.save(function(error) {
     if (error) {
       res.status(400).json({
@@ -146,12 +151,10 @@ app.post('/addPaper', paperupload, function(req, res) {
     }
   });
 
-  //TODO: finish conversion to HTML
-  //Caution: you have to install further LaTeX Packages, MikTex opens a window
   var inputdir = path.join(paperpath, paperid, "tex");
   var input = path.basename(req.files["texfile"][0].originalname);
 
-  converter.convert(inputdir, input);
+  converter.convert(inputdir, input, paper);
 
   res.status(200).json({
     status: "ok"
@@ -183,22 +186,13 @@ app.get('/getPaperById', function(req, res) {
   })
 });
 
+// Serve static pages...
+app.use(express.static('./public'));
 
-// prepare already available directories for serving
-Paper.find({}, function(error, values) {
-  if (error) {
-    var message = "DB error: " + error;
-    console.log(message);
-  } else {
-    for(let val = 0; val < values.length; val++) {
-      app.use(express.static(path.dirname(values[val].htmlCode)));
-      console.log(values[val].htmlCode);
-    }
-  }
-});
-
+// Adds paper directory...
+app.use(express.static('./papers'));
 
 // finally start the server
 app.listen(webPort, function() {
-  console.log('http server now running on port ' + webPort);
+  console.log('SkyPaper server now running on port ' + webPort + '!');
 });
