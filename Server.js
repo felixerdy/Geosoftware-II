@@ -186,6 +186,21 @@ app.get('/getPaperById', function(req, res) {
   })
 });
 
+app.get('/deletePaper', function(req, res) {
+  Paper.findById(req.query.id, function(err, value) {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.json({result: "success!"});
+      Paper.findOne({_id: req.query.id}).remove().exec();
+      if(req.query.id !== "" && req.query.id !== "/") {
+        fsextra.removeSync(path.join(process.cwd(), "/papers", req.query.id));
+      }
+      res.end();
+    }
+  })
+});
+
 // Serve static pages...
 app.use(express.static('./public'));
 
