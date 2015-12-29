@@ -152,15 +152,15 @@ app.post('/addPaper', paperupload, function(req, res) {
         
         gdal.drivers.get("PNG").createCopy(path.join(paperpath, paperid, "geotiff", path.basename(req.files["otherfiles"][fileno].originalname, path.extname(req.files["otherfiles"][fileno].originalname)) + ".png"), dataset);
 
-        tiff.pngpaths.push(paperpath, paperid, "geotiff", path.basename(req.files["otherfiles"][fileno].originalname, path.extname(req.files["otherfiles"][fileno].originalname)) + ".png");
+        tiff.pngpaths.push(path.basename(req.files["otherfiles"][fileno].originalname, path.extname(req.files["otherfiles"][fileno].originalname)) + ".png");
 
-        // converting the offset into [lat, lon], assuming WGS84
+        // converting the offset into [minlat, minlon, maxlat, maxlon], assuming WGS84
         // based on http://stackoverflow.com/questions/2922532/obtain-latitude-and-longitude-from-a-geotiff-file
         // TODO: checking if there is a less ad hoc method for this conversion
         let gt = dataset.geoTransform;
         let w = dataset.rasterSize.x;
         let h = dataset.rasterSize.y;
-        tiff.coordinates = [gt[3] + w*gt[4] + h*gt[5], gt[0]];
+        tiff.coordinates = [gt[3] + w*gt[4] + h*gt[5], gt[0], gt[3], gt[0] + w*gt[1] + h*gt[2]];
 
         tiff.save(function(error) {
           if (error) {
