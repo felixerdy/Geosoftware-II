@@ -160,7 +160,28 @@ app.post('/addPaper', paperupload, function(req, res) {
         let gt = dataset.geoTransform;
         let w = dataset.rasterSize.x;
         let h = dataset.rasterSize.y;
-        tiff.coordinates = [gt[3] + w*gt[4] + h*gt[5], gt[0], gt[3], gt[0] + w*gt[1] + h*gt[2]];
+        
+        let wgs84 = gdal.SpatialReference.fromEPSG(4326); //image data was from unknown 4030
+        let transformer = new gdal.CoordinateTransformation(dataset.srs, wgs84);
+
+        let rstcoord = transformer.transformPoint({
+          x: gt[0] + 0*gt[1] + h*gt[2],
+          y: gt[3] + 0*gt[4] + h*gt[5]
+        });
+        
+        let sndcoord = transformer.transformPoint({
+          x: gt[0] + w*gt[1] + 0*gt[2],
+          y: gt[3] + w*gt[4] + 0*gt[5]
+        });
+
+        tiff.coordinates = [
+          rstcoord.y,
+          rstcoord.x,
+          sndcoord.y,
+          sndcoord.x
+        ];
+
+        console.log(tiff.coordinates);
 
         tiff.save(function(error) {
           if (error) {
