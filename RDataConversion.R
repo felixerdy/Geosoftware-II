@@ -1,5 +1,6 @@
-library(raster)
 library(rgdal)
+library(zoo)
+library(xts)
 
 args <- commandArgs(trailingOnly = TRUE)
 env <- new.env()
@@ -21,7 +22,7 @@ spToGeoJSON <- function(x){
 
 
 if(class(env[[nm]]) == 'zoo' || class(env[[nm]]) == 'mts' || class(env[[nm]]) == 'xts'){
-	write.csv(env[[nm]], file = gsub("\\.[r|R][d|D][a|A][t|T][a|A]", ".csv", args[1]))
+	write.zoo(env[[nm]], file = gsub("\\.[r|R][d|D][a|A][t|T][a|A]", ".csv", args[1]), sep=",")
 } else if(attributes(class(env[[nm]])) == 'sp') {
 	write(spToGeoJSON(env[[nm]]), file=gsub("\\.[r|R][d|D][a|A][t|T][a|A]", ".json", args[1]))
 }
