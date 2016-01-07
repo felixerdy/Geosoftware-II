@@ -123,7 +123,7 @@ app.post('/addPaper', paperupload, function(req, res) {
 
         // only working with zoo files
         var spawn = require('child_process').spawn;
-        var rConvert = spawn("Rscript", ["--vanilla", process.cwd() + '/zooToCSV.R', path.join(paperpath, paperid, "rdata", req.files["otherfiles"][fileno].originalname)]);
+        var rConvert = spawn("Rscript", ["--vanilla", process.cwd() + '/RDataConversion.R', path.join(paperpath, paperid, "rdata", req.files["otherfiles"][fileno].originalname)]);
         rConvert.on('exit', function(code) {
           console.log('Zoo to CSV finished, returning ' + code);
         })
