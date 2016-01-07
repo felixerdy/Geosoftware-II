@@ -7,13 +7,43 @@ var plots = [];
  * @returns the layer object, optional
  */
 function createBaseLayer(map) {
-  return L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ', {
-    maxZoom: 18,
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-      '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-      'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-    id: 'mapbox.streets'
-  }).addTo(map);
+
+	var osmLayer = new L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var osmLayer2 = new L.tileLayer('http://a.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        });
+
+	var MapQuestOpen_Aerial = L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/{type}/{z}/{x}/{y}.{ext}', {
+		type: 'sat',
+		ext: 'jpg',
+		attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency',
+		subdomains: '1234'
+	});
+
+	var Stamen_Watercolor = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
+		attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+		subdomains: 'abcd',
+		minZoom: 1,
+		maxZoom: 16,
+		ext: 'png'
+	});
+
+	var Esri_WorldTopoMap = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+		attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+	});
+
+        var baseMaps = {
+          "OpenStreetMap" : osmLayer,
+          "Grey" : osmLayer2,
+	  "Aerial": MapQuestOpen_Aerial,
+	  "Watercolor": Stamen_Watercolor,
+	  "Esri WorldTopo": Esri_WorldTopoMap
+        };
+        L.control.layers(baseMaps).addTo(map);
+        
 }
 
 function createTiffLayer(map, dataID, paper) {
@@ -92,9 +122,13 @@ $(document).ready(function() {
       var dataID = element.getAttribute('dataid');
 
       if (/^.*\.[t|T][i|I][f|F]$/.test(dataID)) {
+	
         maps.push(L.map(elementID).setView([51.505, -0.09], 3));
         createBaseLayer(maps[maps.length - 1]);
+
         createTiffLayer(maps[maps.length - 1], dataID, paper);
+
+
 
       } else if (/^.*\.[r|R][d|D][a|A][t|T][a|A]$/.test(dataID)) {
         var regEx = new RegExp('.[r|R][d|D][a|A][t|T][a|A]');
