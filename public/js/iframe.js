@@ -73,6 +73,7 @@ function createTiffLayer(map, dataID, paper) {
 }
 
 function createGJSONLayer(map, url) {
+  var markers = new L.MarkerClusterGroup();
 
   $.getJSON(url, function(data) {
     var geojson = L.geoJson(data, {
@@ -83,10 +84,12 @@ function createGJSONLayer(map, url) {
           temp += k + ': ' + v;
         });
         layer.bindPopup(temp);
+	markers.addLayer(layer);
       }
     });
 
-    geojson.addTo(map);
+  //geojson.addTo(map);
+  map.addLayer(markers);
     map.fitBounds(geojson.getBounds());
   }).error(function() {console.log("JSON file not found, maybe rdata was load with unsupported object type") });
  
