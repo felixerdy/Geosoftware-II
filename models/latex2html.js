@@ -52,7 +52,8 @@ exports.convert = function(inputdir, input, paper) {
           '<script src="/js/iframe.js"></script>' +
           '<script src="/js/bowerstuff/Flot/jquery.flot.js"></script>' +
           '<script src="/js/bowerstuff/Flot/jquery.flot.navigate.js"></script>' +
-          '<script src="/js/bowerstuff/Flot/jquery.flot.resize.js"></script>');
+          '<script src="/js/bowerstuff/Flot/jquery.flot.resize.js"></script>' +
+          '<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>');
 
         fs.writeFileSync(path.join(inputdir, path.basename(input, ".tex") + ".html"), htmlData);
 
