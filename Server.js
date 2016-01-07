@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 var path = require('path');
 var fs = require('fs');
 var fsextra = require('fs-extra');
+var gdal = require('gdal');
 
 var app = express();
 var upload = multer({
@@ -14,6 +15,7 @@ var upload = multer({
 });
 
 var Paper = require('./models/paperSchema');
+var Tiff = require('./models/tiffSchema');
 var converter = require('./models/latex2html');
 
 
@@ -61,7 +63,8 @@ app.post('/addPaper', paperupload, function(req, res) {
     publicaton_date: req.body.publication_date,
     search_terms: req.body.search_terms,
     htmlCode: "",
-    geoTiff_path: [],
+    geoTiff_ids: [],
+    geoTiff_names: [],
     rData_path: [],
     geoJSON_path: []
   });
@@ -129,8 +132,68 @@ app.post('/addPaper', paperupload, function(req, res) {
         })
 
       } else if (/^\.[t|T][i|I][f|F]$/.test(path.extname(req.files["otherfiles"][fileno].originalname))) {
+
+        // copy file
         copyToIDFolder("geotiff", "otherfiles", fileno);
-        paper.geoTiff_path.push(path.join(paperpath, paperid, "geotiff", req.files["otherfiles"][fileno].originalname));
+
+        // create tiff db entry
+        let tiff = new Tiff({
+          paperID: paper._id,
+          tiffname: req.files["otherfiles"][fileno].originalname,
+          pngpaths: [],
+          coordinates: []
+        });
+        
+        let tifpath = path.join(paperpath, paperid, "geotiff", req.files["otherfiles"][fileno].originalname);
+
+        // convert image to png
+        // TODO: save multiple layer, if available
+        let dataset = gdal.open(tifpath);
+        
+        gdal.drivers.get("PNG").createCopy(path.join(paperpath, paperid, "geotiff", path.basename(req.files["otherfiles"][fileno].originalname, path.extname(req.files["otherfiles"][fileno].originalname)) + ".png"), dataset);
+
+        tiff.pngpaths.push(path.basename(req.files["otherfiles"][fileno].originalname, path.extname(req.files["otherfiles"][fileno].originalname)) + ".png");
+
+        // converting the offset into [minlat, minlon, maxlat, maxlon], assuming WGS84
+        // based on http://stackoverflow.com/questions/2922532/obtain-latitude-and-longitude-from-a-geotiff-file
+        // TODO: checking if there is a less ad hoc method for this conversion
+        let gt = dataset.geoTransform;
+        let w = dataset.rasterSize.x;
+        let h = dataset.rasterSize.y;
+        
+        let wgs84 = gdal.SpatialReference.fromEPSG(4326); //image data was from unknown 4030
+        let transformer = new gdal.CoordinateTransformation(dataset.srs, wgs84);
+
+        let rstcoord = transformer.transformPoint({
+          x: gt[0] + 0*gt[1] + h*gt[2],
+          y: gt[3] + 0*gt[4] + h*gt[5]
+        });
+        
+        let sndcoord = transformer.transformPoint({
+          x: gt[0] + w*gt[1] + 0*gt[2],
+          y: gt[3] + w*gt[4] + 0*gt[5]
+        });
+
+        tiff.coordinates = [
+          rstcoord.y,
+          rstcoord.x,
+          sndcoord.y,
+          sndcoord.x
+        ];
+
+        console.log(tiff.coordinates);
+
+        tiff.save(function(error) {
+          if (error) {
+            res.status(400).json({
+              status: "Fail creating tiff DB entry for " + req.files["otherfiles"][fileno].originalname + ": " + error
+            });
+          }
+        });
+        
+        paper.geoTiff_names.push(tiff.tiffname);
+        paper.geoTiff_ids.push(tiff._id);
+
       } else if (/^\.[j|J][s|S][o|O][n|N]$/.test(path.extname(req.files["otherfiles"][fileno].originalname))) {
         copyToIDFolder("geojson", "otherfiles", fileno);
         paper.geoJSON_path.push(path.join(paperpath, paperid, "geojson", req.files["otherfiles"][fileno].originalname));
@@ -181,6 +244,38 @@ app.get('/getPaperById', function(req, res) {
       res.status(400).send(err);
     } else {
       res.json(value);
+      res.end();
+    }
+  })
+});
+
+app.get('/getTiffById', function(req, res) {
+  Tiff.findById(req.query.id, function(err, value) {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.json(value);
+      res.end();
+    }
+  })
+});
+
+app.get('/deletePaper', function(req, res) {
+  Paper.findById(req.query.id, function(err, value) {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.json({result: "success!"});
+      
+      // delete tiff entries
+      for(let t = 0; t < value.geoTiff_ids.length; t++) {
+        Tiff.findOne({_id: value.geoTiff_ids[t]._id}).remove().exec();
+      }
+      
+      Paper.findOne({_id: req.query.id}).remove().exec();
+      if(req.query.id !== "" && req.query.id !== "/") {
+        fsextra.removeSync(path.join(process.cwd(), "/papers", req.query.id));
+      }
       res.end();
     }
   })

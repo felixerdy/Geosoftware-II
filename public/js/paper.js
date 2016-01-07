@@ -1,4 +1,6 @@
 "use strict"
+
+// loads the HTML file into the iframe
 $(document).ready(function() {
   var id = window.location.hash.substring(1);
 
@@ -19,3 +21,12 @@ $(document).ready(function() {
   }, 'json');
 });
 
+function deletePaper() {
+  var id = window.location.hash.substring(1);
+
+  $.get(location.origin + '/deletePaper?id=' + id, function(data, textStatus, jqXHR) {
+    window.location = "index.html";
+  });
+  
+
+}
