@@ -159,7 +159,7 @@ $(document).ready(function() {
 
             var flotGraph = [];
             $.each(result, function(index, value) {
-              flotGraph.push([parseFloat(value[headers[0]].replace(/['"]+/g, '')), parseFloat(value[headers[i]])]);
+              flotGraph.push([Date.parse(value[headers[0]].replace(/['"]+/g, '')), parseFloat(value[headers[i]])]);
             });
             var tempFlotSchema = {
               'label': headers[i].replace(/['"]+/g, ''),
@@ -175,6 +175,9 @@ $(document).ready(function() {
             pan: {
               interactive: true
             },
+            xaxis: { 
+	      mode: "time"
+	    },
             series: {
               lines: {
                 show: true
