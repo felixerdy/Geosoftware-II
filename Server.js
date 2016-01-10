@@ -149,20 +149,17 @@ app.post('/addPaper', paperupload, function(req, res) {
         // convert image to png
         // TODO: save multiple layer, if available
         let dataset = gdal.open(tifpath);
-        
-        gdal.drivers.get("PNG").createCopy(path.join(paperpath, paperid, "geotiff", path.basename(req.files["otherfiles"][fileno].originalname, path.extname(req.files["otherfiles"][fileno].originalname)) + ".png"), dataset);
-
-        tiff.pngpaths.push(path.basename(req.files["otherfiles"][fileno].originalname, path.extname(req.files["otherfiles"][fileno].originalname)) + ".png");
 
         // converting the offset into [minlat, minlon, maxlat, maxlon], assuming WGS84
         // based on http://stackoverflow.com/questions/2922532/obtain-latitude-and-longitude-from-a-geotiff-file
-        // TODO: checking if there is a less ad hoc method for this conversion
+
         let gt = dataset.geoTransform;
         let w = dataset.rasterSize.x;
         let h = dataset.rasterSize.y;
         
         let wgs84 = gdal.SpatialReference.fromEPSG(4326); //image data was from unknown 4030
-        let transformer = new gdal.CoordinateTransformation(dataset.srs, wgs84);
+        let originsrs = dataset.srs;
+        let transformer = new gdal.CoordinateTransformation(originsrs, wgs84);
 
         let rstcoord = transformer.transformPoint({
           x: gt[0] + 0*gt[1] + h*gt[2],
@@ -181,7 +178,23 @@ app.post('/addPaper', paperupload, function(req, res) {
           sndcoord.x
         ];
 
-        console.log(tiff.coordinates);
+        console.log("reprojecting " + tifpath);
+
+        // create a special dataset type with the MEMORY driver that allows for in-memory creation
+        let dscopy = gdal.drivers.get("MEM").create(path.join(paperpath, paperid, "geotiff", path.basename(req.files["otherfiles"][fileno].originalname, path.extname(req.files["otherfiles"][fileno].originalname)) + ".mem"), w, h, 1, gdal.GDT_Float32);
+
+        dscopy.geoTransform = dataset.geoTransform;
+
+        gdal.reprojectImage( {
+          src: dataset,
+          dst: dscopy,
+          s_srs: originsrs,
+          t_srs: wgs84
+        });
+
+        gdal.drivers.get("PNG").createCopy(path.join(paperpath, paperid, "geotiff", path.basename(req.files["otherfiles"][fileno].originalname, path.extname(req.files["otherfiles"][fileno].originalname)) + ".png"), dscopy);
+
+        tiff.pngpaths.push(path.basename(req.files["otherfiles"][fileno].originalname, path.extname(req.files["otherfiles"][fileno].originalname)) + ".png");
 
         tiff.save(function(error) {
           if (error) {
