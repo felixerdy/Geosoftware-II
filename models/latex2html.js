@@ -54,12 +54,12 @@ exports.convert = function(inputdir, input, paper) {
           '<script src="/js/bowerstuff/Flot/jquery.flot.navigate.js"></script>' +
           '<script src="/js/bowerstuff/Flot/jquery.flot.resize.js"></script>' +
           '<script src="/js/bowerstuff/Flot/jquery.flot.time.js"></script>' +
-          '<script src="http://datejs.googlecode.com/files/date.js"></script>' +
+          //'<script src="http://datejs.googlecode.com/files/date.js"></script>' +
           '<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>' +
           '<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js"></script>' +
           '<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css" rel="stylesheet" />' +
           '<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css" rel="stylesheet" />' +
-          '<script src="http://momentjs.com/downloads/moment.js"></script>');
+          '<script src="/js/bowerstuff/moment/moment.js"></script>');
 
         fs.writeFileSync(path.join(inputdir, path.basename(input, ".tex") + ".html"), htmlData);
 
