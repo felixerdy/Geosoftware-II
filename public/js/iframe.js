@@ -93,8 +93,6 @@ function createGJSONLayer(map, url) {
     //geojson.addTo(map);
     map.addLayer(markers);
     map.fitBounds(geojson.getBounds());
-  }).error(function() {
-    console.log("JSON file not found, maybe rdata was load with unsupported object type")
   });
 
 
@@ -163,7 +161,7 @@ $(document).ready(function() {
               var flotGraph = [];
               $.each(result, function(index, value) {
                 if (moment(value[headers[0]].replace(/['"]+/g, ''), moment.ISO_8601).isValid()) {
-                  flotGraph.push([Date.parse(value[headers[0]].replace(/['"]+/g, '')), parseFloat(value[headers[i]])]);
+                  flotGraph.push([moment(value[headers[0]].replace(/['"]+/g, ''), moment.ISO_8601).toDate(), parseFloat(value[headers[i]])]);
                 } else {
                   flotGraph.push([parseFloat(value[headers[0]].replace(/['"]+/g, '')), parseFloat(value[headers[i]])]);
                 }
@@ -190,9 +188,6 @@ $(document).ready(function() {
                 series: {
                   lines: {
                     show: true
-                  },
-                  points: {
-                    show: true
                   }
                 }
               });
@@ -206,9 +201,6 @@ $(document).ready(function() {
                 },
                 series: {
                   lines: {
-                    show: true
-                  },
-                  points: {
                     show: true
                   }
                 }
