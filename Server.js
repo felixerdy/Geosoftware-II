@@ -183,7 +183,22 @@ app.post('/addPaper', paperupload, function(req, res) {
         // create a special dataset type with the MEMORY driver that allows for in-memory creation
         let dscopy = gdal.drivers.get("MEM").create(path.join(paperpath, paperid, "geotiff", path.basename(req.files["otherfiles"][fileno].originalname, path.extname(req.files["otherfiles"][fileno].originalname)) + ".mem"), w, h, 1, gdal.GDT_Float32);
 
-        dscopy.geoTransform = dataset.geoTransform;
+        // create new affine transformation
+        let coordorig = transformer.transformPoint({
+          x: gt[0],
+          y: gt[3]
+        });
+        
+        let tgeoTr = [
+          coordorig.x,
+          gt[1],
+          gt[2],
+          coordorig.y,
+          gt[4],
+          gt[5]
+        ];
+
+        dscopy.geoTransform = tgeoTr;
 
         gdal.reprojectImage( {
           src: dataset,
