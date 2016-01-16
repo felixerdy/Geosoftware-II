@@ -93,8 +93,6 @@ function createGJSONLayer(map, url) {
     //geojson.addTo(map);
     map.addLayer(markers);
     map.fitBounds(geojson.getBounds());
-  }).error(function() {
-    console.log("JSON file not found, maybe rdata was load with unsupported object type")
   });
 
 
@@ -163,7 +161,7 @@ $(document).ready(function() {
               var flotGraph = [];
               $.each(result, function(index, value) {
                 if (moment(value[headers[0]].replace(/['"]+/g, ''), moment.ISO_8601).isValid()) {
-                  flotGraph.push([Date.parse(value[headers[0]].replace(/['"]+/g, '')), parseFloat(value[headers[i]])]);
+                  flotGraph.push([moment(value[headers[0]].replace(/['"]+/g, ''), moment.ISO_8601).toDate(), parseFloat(value[headers[i]])]);
                 } else {
                   flotGraph.push([parseFloat(value[headers[0]].replace(/['"]+/g, '')), parseFloat(value[headers[i]])]);
                 }
@@ -190,9 +188,6 @@ $(document).ready(function() {
                 series: {
                   lines: {
                     show: true
-                  },
-                  points: {
-                    show: true
                   }
                 }
               });
@@ -207,21 +202,24 @@ $(document).ready(function() {
                 series: {
                   lines: {
                     show: true
-                  },
-                  points: {
-                    show: true
                   }
                 }
               });
             }
 
+          },
+          statusCode: {
+            404: function() {
+              console.log(dataID.replace(regEx, '.csv') + ' was not found. Looking for ' + dataID.replace(regEx, '.json'))
+              jsonToMap("../rdata/" + dataID.replace(regEx, '.json'));
+            }
           }
         });
-
+/**
         // if csv not found, json is only left supported format. error handling in createGJSONLayer $getJSON
         if (csvFound == false) {
           jsonToMap("../rdata/" + dataID.replace(regEx, '.json'));
-        }
+        }*/
 
 
       } else if (/^.*\.[j|J][s|S][o|O][n|N]$/.test(dataID)) {
