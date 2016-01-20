@@ -17,6 +17,7 @@ var upload = multer({
 var Paper = require('./models/paperSchema');
 var Tiff = require('./models/tiffSchema');
 var converter = require('./models/latex2html');
+var User = require('./models/userSchema');
 
 
 var webPort = 8080;
@@ -143,13 +144,13 @@ app.post('/addPaper', paperupload, function(req, res) {
           pngpaths: [],
           coordinates: []
         });
-        
+
         let tifpath = path.join(paperpath, paperid, "geotiff", req.files["otherfiles"][fileno].originalname);
 
         // convert image to png
         // TODO: save multiple layer, if available
         let dataset = gdal.open(tifpath);
-        
+
         gdal.drivers.get("PNG").createCopy(path.join(paperpath, paperid, "geotiff", path.basename(req.files["otherfiles"][fileno].originalname, path.extname(req.files["otherfiles"][fileno].originalname)) + ".png"), dataset);
 
         tiff.pngpaths.push(path.basename(req.files["otherfiles"][fileno].originalname, path.extname(req.files["otherfiles"][fileno].originalname)) + ".png");
@@ -160,7 +161,7 @@ app.post('/addPaper', paperupload, function(req, res) {
         let gt = dataset.geoTransform;
         let w = dataset.rasterSize.x;
         let h = dataset.rasterSize.y;
-        
+
         let wgs84 = gdal.SpatialReference.fromEPSG(4326); //image data was from unknown 4030
         let transformer = new gdal.CoordinateTransformation(dataset.srs, wgs84);
 
@@ -168,7 +169,7 @@ app.post('/addPaper', paperupload, function(req, res) {
           x: gt[0] + 0*gt[1] + h*gt[2],
           y: gt[3] + 0*gt[4] + h*gt[5]
         });
-        
+
         let sndcoord = transformer.transformPoint({
           x: gt[0] + w*gt[1] + 0*gt[2],
           y: gt[3] + w*gt[4] + 0*gt[5]
@@ -190,7 +191,7 @@ app.post('/addPaper', paperupload, function(req, res) {
             });
           }
         });
-        
+
         paper.geoTiff_names.push(tiff.tiffname);
         paper.geoTiff_ids.push(tiff._id);
 
@@ -266,12 +267,12 @@ app.get('/deletePaper', function(req, res) {
       res.status(400).send(err);
     } else {
       res.json({result: "success!"});
-      
+
       // delete tiff entries
       for(let t = 0; t < value.geoTiff_ids.length; t++) {
         Tiff.findOne({_id: value.geoTiff_ids[t]._id}).remove().exec();
       }
-      
+
       Paper.findOne({_id: req.query.id}).remove().exec();
       if(req.query.id !== "" && req.query.id !== "/") {
         fsextra.removeSync(path.join(process.cwd(), "/papers", req.query.id));
@@ -290,4 +291,76 @@ app.use(express.static('./papers'));
 // finally start the server
 app.listen(webPort, function() {
   console.log('SkyPaper server now running on port ' + webPort + '!');
+});
+
+
+
+/**
+* Authentification 
+*
+*/
+
+var passport = require('passport');
+var StrategyGoogle = require('passport-google-openidconnect').Strategy;
+var session = require('express-session');
+
+app.use(session({ secret: 'anything' }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new StrategyGoogle({
+    clientID: '960789925540-hcpph7hipbqi2h1njmndpfs3m8hlllnl.apps.googleusercontent.com',
+    clientSecret: 'v1Xszmg8x3H3CUO70iY4-40V',
+    callbackURL: "http://localhost:8080/auth/google/callback"
+  },
+  function(iss, sub, profile, accessToken, refreshToken, done) {
+        //check user table for anyone with a facebook ID of profile.id
+        User.findOne({
+            'googleID': profile.id
+        }, function(err, user) {
+            if (err) {
+                return done(err);
+            }
+            //No user was found... so create a new user with values from Facebook (all the profile. stuff)
+            if (!user) {
+                user = new User({
+                    googleID: profile.id
+                });
+                user.save(function(err) {
+                    if (err) console.log(err);
+                    return done(err, user);
+                });
+            } else {
+                //found user. Return
+                return done(err, user);
+            }
+        });
+    }
+));
+
+app.get('/auth/google',
+  passport.authenticate('google-openidconnect'));
+
+app.get('/auth/google/callback',
+  passport.authenticate('google-openidconnect', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
+
+passport.serializeUser(function(user, done) {  
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) { 
+  done(null, user);
+});
+
+app.get('/isLoggedIn', function (req, res) {
+  if(req.user) {
+    res.send(true);
+  } else {
+    res.send(false);
+  }
+
 });
