@@ -166,13 +166,13 @@ app.post('/addPaper', paperupload, function(req, res) {
         let transformer = new gdal.CoordinateTransformation(dataset.srs, wgs84);
 
         let rstcoord = transformer.transformPoint({
-          x: gt[0] + 0*gt[1] + h*gt[2],
-          y: gt[3] + 0*gt[4] + h*gt[5]
+          x: gt[0] + 0 * gt[1] + h * gt[2],
+          y: gt[3] + 0 * gt[4] + h * gt[5]
         });
 
         let sndcoord = transformer.transformPoint({
-          x: gt[0] + w*gt[1] + 0*gt[2],
-          y: gt[3] + w*gt[4] + 0*gt[5]
+          x: gt[0] + w * gt[1] + 0 * gt[2],
+          y: gt[3] + w * gt[4] + 0 * gt[5]
         });
 
         tiff.coordinates = [
@@ -266,15 +266,21 @@ app.get('/deletePaper', function(req, res) {
     if (err) {
       res.status(400).send(err);
     } else {
-      res.json({result: "success!"});
+      res.json({
+        result: "success!"
+      });
 
       // delete tiff entries
-      for(let t = 0; t < value.geoTiff_ids.length; t++) {
-        Tiff.findOne({_id: value.geoTiff_ids[t]._id}).remove().exec();
+      for (let t = 0; t < value.geoTiff_ids.length; t++) {
+        Tiff.findOne({
+          _id: value.geoTiff_ids[t]._id
+        }).remove().exec();
       }
 
-      Paper.findOne({_id: req.query.id}).remove().exec();
-      if(req.query.id !== "" && req.query.id !== "/") {
+      Paper.findOne({
+        _id: req.query.id
+      }).remove().exec();
+      if (req.query.id !== "" && req.query.id !== "/") {
         fsextra.removeSync(path.join(process.cwd(), "/papers", req.query.id));
       }
       res.end();
@@ -296,71 +302,98 @@ app.listen(webPort, function() {
 
 
 /**
-* Authentification 
-*
-*/
+ * Authentification
+ *
+ */
 
 var passport = require('passport');
 var StrategyGoogle = require('passport-google-openidconnect').Strategy;
 var session = require('express-session');
 
-app.use(session({ secret: 'anything' }));
+app.use(session({
+  secret: 'anything'
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
+//TODO change localhost in callbackURL to something hostname
 passport.use(new StrategyGoogle({
     clientID: '960789925540-hcpph7hipbqi2h1njmndpfs3m8hlllnl.apps.googleusercontent.com',
     clientSecret: 'v1Xszmg8x3H3CUO70iY4-40V',
     callbackURL: "http://localhost:8080/auth/google/callback"
   },
   function(iss, sub, profile, accessToken, refreshToken, done) {
-        //check user table for anyone with a facebook ID of profile.id
-        User.findOne({
-            'googleID': profile.id
-        }, function(err, user) {
-            if (err) {
-                return done(err);
-            }
-            //No user was found... so create a new user with values from Facebook (all the profile. stuff)
-            if (!user) {
-                user = new User({
-                    googleID: profile.id
-                });
-                user.save(function(err) {
-                    if (err) console.log(err);
-                    return done(err, user);
-                });
-            } else {
-                //found user. Return
-                return done(err, user);
-            }
+    //check user table for anyone with a facebook ID of profile.id
+    User.findOne({
+      'googleID': profile.id
+    }, function(err, user) {
+      if (err) {
+        return done(err);
+      }
+      //No user was found... so create a new user
+      if (!user) {
+        user = new User({
+          googleID: profile.id
         });
-    }
+        user.save(function(err) {
+          if (err) console.log(err);
+          return done(err, user);
+        });
+      } else {
+        //found user. Return
+        return done(err, user);
+      }
+    });
+  }
 ));
 
 app.get('/auth/google',
   passport.authenticate('google-openidconnect'));
 
 app.get('/auth/google/callback',
-  passport.authenticate('google-openidconnect', { failureRedirect: '/login' }),
+  passport.authenticate('google-openidconnect', {
+    failureRedirect: '/login'
+  }),
   function(req, res) {
     // Successful authentication, redirect home.
     res.redirect('/');
   });
 
-passport.serializeUser(function(user, done) {  
+passport.serializeUser(function(user, done) {
   done(null, user);
 });
 
-passport.deserializeUser(function(user, done) { 
+passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
-app.get('/isLoggedIn', function (req, res) {
-  if(req.user) {
+/**
+ *   @desc checks if there is a logged in user and sends true or false
+ */
+app.get('/isLoggedIn', function(req, res) {
+  if (req.user) {
     res.send(true);
   } else {
     res.send(false);
   }
+});
 
+/**
+ *   @desc checks if there is a logged in user and sends the user data or false when there is nobody logged in
+ */
+app.get('/getLoggedInUser', function(req, res) {
+  if (req.user) {
+    res.send(req.user);
+  } else {
+    res.send(false);
+  }
+});
+
+
+/**
+ *   @desc logs out the current user
+ */
+app.get('/logout', function(req, res) {
+  req.logout();
+  res.redirect('/');
 });
