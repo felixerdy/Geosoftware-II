@@ -54,12 +54,16 @@ exports.convert = function(inputdir, input, paper) {
           '<script src="/js/bowerstuff/Flot/jquery.flot.navigate.js"></script>' +
           '<script src="/js/bowerstuff/Flot/jquery.flot.resize.js"></script>' +
           '<script src="/js/bowerstuff/Flot/jquery.flot.time.js"></script>' +
-          //'<script src="http://datejs.googlecode.com/files/date.js"></script>' +
+          '<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">' +
+          '<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>' +
           '<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>' +
           '<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js"></script>' +
           '<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css" rel="stylesheet" />' +
           '<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css" rel="stylesheet" />' +
-          '<script src="/js/bowerstuff/moment/moment.js"></script>');
+          '<script src="/js/bowerstuff/moment/moment.js"></script>' +
+          '<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.12/proj4-src.js"></script>' +
+          '<script src="http://kartena.github.io/Proj4Leaflet/src/proj4leaflet.js"></script>' +
+          '<script src="http://webmap.arcticconnect.org/js/polarmap.js"></script>');
 
         fs.writeFileSync(path.join(inputdir, path.basename(input, ".tex") + ".html"), htmlData);
 
