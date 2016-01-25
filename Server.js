@@ -23,6 +23,8 @@ var passport = require('passport');
 var StrategyGoogle = require('passport-google-openidconnect').Strategy;
 var session = require('express-session');
 
+var keys = require('./keys.js');
+
 
 // Serve static pages...
 app.use(express.static('./public'));
@@ -38,8 +40,8 @@ app.use(passport.session());
 
 //TODO change localhost in callbackURL to something hostname
 passport.use(new StrategyGoogle({
-    clientID: '960789925540-hcpph7hipbqi2h1njmndpfs3m8hlllnl.apps.googleusercontent.com',
-    clientSecret: 'v1Xszmg8x3H3CUO70iY4-40V',
+    clientID: keys.clientID,
+    clientSecret: keys.clientSecret,
     callbackURL: "http://localhost:8080/auth/google/callback"
   },
   function(iss, sub, profile, accessToken, refreshToken, done) {
