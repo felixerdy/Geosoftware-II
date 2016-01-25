@@ -61,9 +61,10 @@ exports.convert = function(inputdir, input, paper) {
           '<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css" rel="stylesheet" />' +
           '<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css" rel="stylesheet" />' +
           '<script src="/js/bowerstuff/moment/moment.js"></script>' +
-          '<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.12/proj4-src.js"></script>' +
-          '<script src="http://kartena.github.io/Proj4Leaflet/src/proj4leaflet.js"></script>' +
-          '<script src="http://webmap.arcticconnect.org/js/polarmap.js"></script>');
+          '<script src="/js/bowerstuff/proj4/dist/proj4-src.js"></script>' +
+          '<script src="/js/bowerstuff/proj4leaflet/src/proj4leaflet.js"></script>' +
+          '<link href="/js/bowerstuff/polarmap.js/css/polarmap.css" rel="stylesheet" />' +
+          '<script src="/js/bowerstuff/polarmap.js/dist/polarmap-src.js"></script>');
 
         fs.writeFileSync(path.join(inputdir, path.basename(input, ".tex") + ".html"), htmlData);
 

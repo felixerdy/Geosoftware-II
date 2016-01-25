@@ -21,7 +21,8 @@ var paperSchema = new Schema({
   geoTiff_names: [String],
   rData_path: [String],
   geoJSON_path: [String],
-  processing_state: Number
+  processing_state: Number,
+  publisher: Number
 });
 
 var Paper = mongoose.model('Paper', paperSchema);

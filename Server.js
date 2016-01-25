@@ -19,6 +19,54 @@ var Tiff = require('./models/tiffSchema');
 var converter = require('./models/latex2html');
 var User = require('./models/userSchema');
 
+var passport = require('passport');
+var StrategyGoogle = require('passport-google-openidconnect').Strategy;
+var session = require('express-session');
+
+
+// Serve static pages...
+app.use(express.static('./public'));
+
+// Adds paper directory...
+app.use(express.static('./papers'));
+
+app.use(session({
+  secret: 'anything'
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+//TODO change localhost in callbackURL to something hostname
+passport.use(new StrategyGoogle({
+    clientID: '960789925540-hcpph7hipbqi2h1njmndpfs3m8hlllnl.apps.googleusercontent.com',
+    clientSecret: 'v1Xszmg8x3H3CUO70iY4-40V',
+    callbackURL: "http://localhost:8080/auth/google/callback"
+  },
+  function(iss, sub, profile, accessToken, refreshToken, done) {
+    //check user table for anyone with a facebook ID of profile.id
+    User.findOne({
+      'googleID': profile.id
+    }, function(err, user) {
+      if (err) {
+        return done(err);
+      }
+      //No user was found... so create a new user
+      if (!user) {
+        user = new User({
+          googleID: profile.id
+        });
+        user.save(function(err) {
+          if (err) console.log(err);
+          return done(err, user);
+        });
+      } else {
+        //found user. Return
+        return done(err, user);
+      }
+    });
+  }
+));
+
 
 var webPort = 8080;
 var dbPort = 27017;
@@ -54,6 +102,7 @@ var paperupload = upload.fields([{
   maxCount: 50
 }]);
 app.post('/addPaper', paperupload, function(req, res) {
+  if (req.user) { // check if there is a logged in user
 
   // Since we need the DB object id, we first create an entry
   // half-empty, then create the paths using the ID and then
@@ -67,7 +116,8 @@ app.post('/addPaper', paperupload, function(req, res) {
     geoTiff_ids: [],
     geoTiff_names: [],
     rData_path: [],
-    geoJSON_path: []
+    geoJSON_path: [],
+    publisher: req.user.googleID
   });
   paper.save(function(error) {
     if (error) {
@@ -129,7 +179,7 @@ app.post('/addPaper', paperupload, function(req, res) {
         var spawn = require('child_process').spawn;
         var rConvert = spawn("Rscript", ["--vanilla", process.cwd() + '/RDataConversion.R', path.join(paperpath, paperid, "rdata", req.files["otherfiles"][fileno].originalname)]);
         rConvert.on('exit', function(code) {
-          console.log('Zoo to CSV finished, returning ' + code);
+          console.log('RData conversion finished, returning ' + code);
         })
 
       } else if (/^\.[t|T][i|I][f|F]$/.test(path.extname(req.files["otherfiles"][fileno].originalname))) {
@@ -223,7 +273,13 @@ app.post('/addPaper', paperupload, function(req, res) {
   res.status(200).json({
     status: "ok"
   });
-
+} else {
+  // there is no logged in user
+  console.log('there is a not-logged-in-user trying to upload a paper');
+  res.status(401).json({
+    status: "unauthorized"
+  });
+}
 });
 
 app.get('/getPapers', function(req, res) {
@@ -266,86 +322,48 @@ app.get('/deletePaper', function(req, res) {
     if (err) {
       res.status(400).send(err);
     } else {
-      res.json({
-        result: "success!"
-      });
+      if(req.user) { // check if there is currently a logged in user
+        if(req.user.googleID == value.publisher) { // check if the logged in user is publisher of the paper
+          console.log('deleting paper');
+          res.json({
+            result: "success!"
+          });
 
-      // delete tiff entries
-      for (let t = 0; t < value.geoTiff_ids.length; t++) {
-        Tiff.findOne({
-          _id: value.geoTiff_ids[t]._id
-        }).remove().exec();
-      }
+          // delete tiff entries
+          for (let t = 0; t < value.geoTiff_ids.length; t++) {
+            Tiff.findOne({
+              _id: value.geoTiff_ids[t]._id
+            }).remove().exec();
+          }
 
-      Paper.findOne({
-        _id: req.query.id
-      }).remove().exec();
-      if (req.query.id !== "" && req.query.id !== "/") {
-        fsextra.removeSync(path.join(process.cwd(), "/papers", req.query.id));
+          Paper.findOne({
+            _id: req.query.id
+          }).remove().exec();
+          if (req.query.id !== "" && req.query.id !== "/") {
+            fsextra.removeSync(path.join(process.cwd(), "/papers", req.query.id));
+          }
+          res.end();
+        } else {
+          console.log('user is not allowed to delete paper');
+          res.status(401).json({
+            status: "unauthorized"
+          });
+        }
+      } else {
+        console.log('there is a not-logged-in-user trying to delete paper');
+        res.status(401).json({
+          status: "unauthorized"
+        });
       }
-      res.end();
     }
   })
 });
-
-// Serve static pages...
-app.use(express.static('./public'));
-
-// Adds paper directory...
-app.use(express.static('./papers'));
-
-// finally start the server
-app.listen(webPort, function() {
-  console.log('SkyPaper server now running on port ' + webPort + '!');
-});
-
 
 
 /**
  * Authentification
  *
  */
-
-var passport = require('passport');
-var StrategyGoogle = require('passport-google-openidconnect').Strategy;
-var session = require('express-session');
-
-app.use(session({
-  secret: 'anything'
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-
-//TODO change localhost in callbackURL to something hostname
-passport.use(new StrategyGoogle({
-    clientID: '960789925540-hcpph7hipbqi2h1njmndpfs3m8hlllnl.apps.googleusercontent.com',
-    clientSecret: 'v1Xszmg8x3H3CUO70iY4-40V',
-    callbackURL: "http://localhost:8080/auth/google/callback"
-  },
-  function(iss, sub, profile, accessToken, refreshToken, done) {
-    //check user table for anyone with a facebook ID of profile.id
-    User.findOne({
-      'googleID': profile.id
-    }, function(err, user) {
-      if (err) {
-        return done(err);
-      }
-      //No user was found... so create a new user
-      if (!user) {
-        user = new User({
-          googleID: profile.id
-        });
-        user.save(function(err) {
-          if (err) console.log(err);
-          return done(err, user);
-        });
-      } else {
-        //found user. Return
-        return done(err, user);
-      }
-    });
-  }
-));
 
 app.get('/auth/google',
   passport.authenticate('google-openidconnect'));
@@ -396,4 +414,10 @@ app.get('/getLoggedInUser', function(req, res) {
 app.get('/logout', function(req, res) {
   req.logout();
   res.redirect('/');
+});
+
+
+// finally start the server
+app.listen(webPort, function() {
+  console.log('SkyPaper server now running on port ' + webPort + '!');
 });
