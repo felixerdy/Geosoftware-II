@@ -25,6 +25,7 @@
     "mongodb": "^2.1.0",
     "mongoose": "^4.2.8",
     "multer": "^1.1.0",
-    "passport": "^0.3.2"
+    "passport": "^0.3.2",
+    "passport-google-openidconnect": "0.0.4"
   }
 }
