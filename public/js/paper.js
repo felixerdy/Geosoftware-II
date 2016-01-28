@@ -7,6 +7,8 @@ var paperPublisher = 0;
 $(document).ready(function() {
   var id = window.location.hash.substring(1);
 
+  $('#paperDownloadButton').attr('onclick', 'window.location="/' + id + '/' + id + '.zip"');
+
   // polyfill from http://stackoverflow.com/questions/1420881/how-to-extract-base-url-from-a-string-in-javascript
   if (typeof location.origin === 'undefined') location.origin = location.protocol + '//' + location.host;
 
