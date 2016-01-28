@@ -55,7 +55,8 @@ passport.use(new StrategyGoogle({
       //No user was found... so create a new user
       if (!user) {
         user = new User({
-          googleID: profile.id
+          googleID: profile.id,
+          name: profile.displayName
         });
         user.save(function(err) {
           if (err) console.log(err);
