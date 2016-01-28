@@ -59,6 +59,13 @@
           </li>
           <li><a href="documentation.html">Documentation</a></li>
         </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <div id='loginLogoutDiv'>
+
+            </div>
+          </li>
+        </ul>
 
       </div>
       <!-- /.navbar-collapse -->
@@ -71,7 +78,7 @@
     <div class="panel panel-default">
       <div class="panel-body">
         <p>Skypaper is a new way to distribute your geospatial publications. Start by searching for a publication in the table below or publish your own paper. See the documentation for information about the upload process.</p>
-        <p style="text-align: center;"><a class="btn btn-default" data-toggle="modal" data-target="#paperUploadModal">Publish</a></p>
+        <p style="text-align: center;"><a class="btn btn-default" id='mainPageUploadButton' data-toggle="modal" data-target="#paperUploadModal">Publish</a></p>
 
       </div>
     </div>
@@ -189,7 +196,7 @@
               </div>
               <div class="col-md-9">
                 <span class="btn btn-default btn-file">Browse..., 50 files max
-                  <input multiple type="file" name="otherfiles" accept=".tif, .json, .Rdata, .jpg, .jpeg, .png, .pdf">
+                  <input multiple type="file" name="otherfiles">
                 </span>
               </div>
             </div>
@@ -206,6 +213,7 @@
 
   <script src="js/paperupload.js"></script>
   <script src="js/tableupdater.js"></script>
+  <script src="js/auth.js"></script>
 
 
 

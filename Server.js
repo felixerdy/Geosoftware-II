@@ -8,6 +8,7 @@ var path = require('path');
 var fs = require('fs');
 var fsextra = require('fs-extra');
 var gdal = require('gdal');
+var archiver = require('archiver');
 
 var app = express();
 var upload = multer({
@@ -17,6 +18,58 @@ var upload = multer({
 var Paper = require('./models/paperSchema');
 var Tiff = require('./models/tiffSchema');
 var converter = require('./models/latex2html');
+var User = require('./models/userSchema');
+
+var passport = require('passport');
+var StrategyGoogle = require('passport-google-openidconnect').Strategy;
+var session = require('express-session');
+
+var keys = require('./keys.js');
+
+
+// Serve static pages...
+app.use(express.static('./public'));
+
+// Adds paper directory...
+app.use(express.static('./papers'));
+
+app.use(session({
+  secret: 'anything'
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+//TODO change localhost in callbackURL to something hostname
+passport.use(new StrategyGoogle({
+    clientID: keys.clientID,
+    clientSecret: keys.clientSecret,
+    callbackURL: "http://localhost:8080/auth/google/callback"
+  },
+  function(iss, sub, profile, accessToken, refreshToken, done) {
+    //check user table for anyone with a facebook ID of profile.id
+    User.findOne({
+      'googleID': profile.id
+    }, function(err, user) {
+      if (err) {
+        return done(err);
+      }
+      //No user was found... so create a new user
+      if (!user) {
+        user = new User({
+          googleID: profile.id,
+          name: profile.displayName
+        });
+        user.save(function(err) {
+          if (err) console.log(err);
+          return done(err, user);
+        });
+      } else {
+        //found user. Return
+        return done(err, user);
+      }
+    });
+  }
+));
 
 
 var webPort = 8080;
@@ -53,6 +106,7 @@ var paperupload = upload.fields([{
   maxCount: 50
 }]);
 app.post('/addPaper', paperupload, function(req, res) {
+  if (req.user) { // check if there is a logged in user
 
   // Since we need the DB object id, we first create an entry
   // half-empty, then create the paths using the ID and then
@@ -66,7 +120,8 @@ app.post('/addPaper', paperupload, function(req, res) {
     geoTiff_ids: [],
     geoTiff_names: [],
     rData_path: [],
-    geoJSON_path: []
+    geoJSON_path: [],
+    publisher: req.user.googleID
   });
   paper.save(function(error) {
     if (error) {
@@ -128,7 +183,7 @@ app.post('/addPaper', paperupload, function(req, res) {
         var spawn = require('child_process').spawn;
         var rConvert = spawn("Rscript", ["--vanilla", process.cwd() + '/RDataConversion.R', path.join(paperpath, paperid, "rdata", req.files["otherfiles"][fileno].originalname)]);
         rConvert.on('exit', function(code) {
-          console.log('Zoo to CSV finished, returning ' + code);
+          console.log('RData conversion finished, returning ' + code);
         })
 
       } else if (/^\.[t|T][i|I][f|F]$/.test(path.extname(req.files["otherfiles"][fileno].originalname))) {
@@ -143,13 +198,13 @@ app.post('/addPaper', paperupload, function(req, res) {
           pngpaths: [],
           coordinates: []
         });
-        
+
         let tifpath = path.join(paperpath, paperid, "geotiff", req.files["otherfiles"][fileno].originalname);
 
         // convert image to png
         // TODO: save multiple layer, if available
         let dataset = gdal.open(tifpath);
-        
+
         gdal.drivers.get("PNG").createCopy(path.join(paperpath, paperid, "geotiff", path.basename(req.files["otherfiles"][fileno].originalname, path.extname(req.files["otherfiles"][fileno].originalname)) + ".png"), dataset);
 
         tiff.pngpaths.push(path.basename(req.files["otherfiles"][fileno].originalname, path.extname(req.files["otherfiles"][fileno].originalname)) + ".png");
@@ -160,18 +215,18 @@ app.post('/addPaper', paperupload, function(req, res) {
         let gt = dataset.geoTransform;
         let w = dataset.rasterSize.x;
         let h = dataset.rasterSize.y;
-        
+
         let wgs84 = gdal.SpatialReference.fromEPSG(4326); //image data was from unknown 4030
         let transformer = new gdal.CoordinateTransformation(dataset.srs, wgs84);
 
         let rstcoord = transformer.transformPoint({
-          x: gt[0] + 0*gt[1] + h*gt[2],
-          y: gt[3] + 0*gt[4] + h*gt[5]
+          x: gt[0] + 0 * gt[1] + h * gt[2],
+          y: gt[3] + 0 * gt[4] + h * gt[5]
         });
-        
+
         let sndcoord = transformer.transformPoint({
-          x: gt[0] + w*gt[1] + 0*gt[2],
-          y: gt[3] + w*gt[4] + 0*gt[5]
+          x: gt[0] + w * gt[1] + 0 * gt[2],
+          y: gt[3] + w * gt[4] + 0 * gt[5]
         });
 
         tiff.coordinates = [
@@ -190,7 +245,7 @@ app.post('/addPaper', paperupload, function(req, res) {
             });
           }
         });
-        
+
         paper.geoTiff_names.push(tiff.tiffname);
         paper.geoTiff_ids.push(tiff._id);
 
@@ -219,10 +274,24 @@ app.post('/addPaper', paperupload, function(req, res) {
 
   converter.convert(inputdir, input, paper);
 
+  // create zip file
+  var archiveStream = fs.createWriteStream(path.join(paperpath, paperid + ".zip"));
+  var archive = archiver('zip');
+  archive.pipe(archiveStream);
+  archive.directory(path.join(paperpath, paperid), paperid, "");
+  archive.finalize();
+
+
   res.status(200).json({
     status: "ok"
   });
-
+} else {
+  // there is no logged in user
+  console.log('there is a not-logged-in-user trying to upload a paper');
+  res.status(401).json({
+    status: "unauthorized"
+  });
+}
 });
 
 app.get('/getPapers', function(req, res) {
@@ -265,27 +334,101 @@ app.get('/deletePaper', function(req, res) {
     if (err) {
       res.status(400).send(err);
     } else {
-      res.json({result: "success!"});
-      
-      // delete tiff entries
-      for(let t = 0; t < value.geoTiff_ids.length; t++) {
-        Tiff.findOne({_id: value.geoTiff_ids[t]._id}).remove().exec();
+      if(req.user) { // check if there is currently a logged in user
+        if(req.user.googleID == value.publisher) { // check if the logged in user is publisher of the paper
+          console.log('deleting paper');
+          res.json({
+            result: "success!"
+          });
+
+          // delete tiff entries
+          for (let t = 0; t < value.geoTiff_ids.length; t++) {
+            Tiff.findOne({
+              _id: value.geoTiff_ids[t]._id
+            }).remove().exec();
+          }
+
+          Paper.findOne({
+            _id: req.query.id
+          }).remove().exec();
+          if (req.query.id !== "" && req.query.id !== "/") {
+            fsextra.removeSync(path.join(process.cwd(), "/papers", req.query.id));
+            fsextra.removeSync(path.join(process.cwd(), "/papers", req.query.id + ".zip"));
+          }
+          res.end();
+        } else {
+          console.log('user is not allowed to delete paper');
+          res.status(401).json({
+            status: "unauthorized"
+          });
+        }
+      } else {
+        console.log('there is a not-logged-in-user trying to delete paper');
+        res.status(401).json({
+          status: "unauthorized"
+        });
       }
-      
-      Paper.findOne({_id: req.query.id}).remove().exec();
-      if(req.query.id !== "" && req.query.id !== "/") {
-        fsextra.removeSync(path.join(process.cwd(), "/papers", req.query.id));
-      }
-      res.end();
     }
   })
 });
 
-// Serve static pages...
-app.use(express.static('./public'));
 
-// Adds paper directory...
-app.use(express.static('./papers'));
+/**
+ * Authentification
+ *
+ */
+
+app.get('/auth/google',
+  passport.authenticate('google-openidconnect'));
+
+app.get('/auth/google/callback',
+  passport.authenticate('google-openidconnect', {
+    failureRedirect: '/login'
+  }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+/**
+ *   @desc checks if there is a logged in user and sends true or false
+ */
+app.get('/isLoggedIn', function(req, res) {
+  if (req.user) {
+    res.send(true);
+  } else {
+    res.send(false);
+  }
+});
+
+/**
+ *   @desc checks if there is a logged in user and sends the user data or false when there is nobody logged in
+ */
+app.get('/getLoggedInUser', function(req, res) {
+  if (req.user) {
+    res.send(req.user);
+  } else {
+    res.send(false);
+  }
+});
+
+
+/**
+ *   @desc logs out the current user
+ */
+app.get('/logout', function(req, res) {
+  req.logout();
+  res.redirect('/');
+});
+
 
 // finally start the server
 app.listen(webPort, function() {
