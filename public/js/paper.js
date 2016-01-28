@@ -28,10 +28,10 @@ $(document).ready(function() {
   $.get(location.origin + '/getLoggedInUser', function(data, textStatus, jqXHR) {
     if (data.googleID == paperPublisher) {
       // user is the publisher, allow to delete paper
-      $('#papereditbutton').removeClass('disabled');
+      $('#papereditbutton').removeClass('hidden');
     } else {
       // user is not the publisher
-      $('#papereditbutton').addClass('disabled');
+      $('#papereditbutton').addClass('hidden');
       $('#papereditbutton').prop('title', 'You are not authorized to delete this paper');
     }
   });
