@@ -8,6 +8,7 @@ var path = require('path');
 var fs = require('fs');
 var fsextra = require('fs-extra');
 var gdal = require('gdal');
+var archiver = require('archiver');
 
 var app = express();
 var upload = multer({
@@ -273,6 +274,14 @@ app.post('/addPaper', paperupload, function(req, res) {
 
   converter.convert(inputdir, input, paper);
 
+  // create zip file
+  var archiveStream = fs.createWriteStream(path.join(paperpath, paperid + ".zip"));
+  var archive = archiver('zip');
+  archive.pipe(archiveStream);
+  archive.directory(path.join(paperpath, paperid), paperid, "");
+  archive.finalize();
+
+
   res.status(200).json({
     status: "ok"
   });
@@ -344,6 +353,7 @@ app.get('/deletePaper', function(req, res) {
           }).remove().exec();
           if (req.query.id !== "" && req.query.id !== "/") {
             fsextra.removeSync(path.join(process.cwd(), "/papers", req.query.id));
+            fsextra.removeSync(path.join(process.cwd(), "/papers", req.query.id + ".zip"));
           }
           res.end();
         } else {
