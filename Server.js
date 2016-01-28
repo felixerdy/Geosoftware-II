@@ -275,7 +275,7 @@ app.post('/addPaper', paperupload, function(req, res) {
   converter.convert(inputdir, input, paper);
 
   // create zip file
-  var archiveStream = fs.createWriteStream(path.join(paperpath, paperid + ".zip"));
+  var archiveStream = fs.createWriteStream(path.join(paperpath, paperid, paperid + ".zip"));
   var archive = archiver('zip');
   archive.pipe(archiveStream);
   archive.directory(path.join(paperpath, paperid), paperid, "");
