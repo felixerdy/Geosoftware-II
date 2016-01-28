@@ -281,9 +281,9 @@ app.post('/addPaper', paperupload, function(req, res) {
   archive.directory(path.join(paperpath, paperid), paperid, "");
   archive.finalize();
 
-
   res.status(200).json({
-    status: "ok"
+    status: "ok",
+    paperID: paper._id
   });
 } else {
   // there is no logged in user
