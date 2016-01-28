@@ -1,9 +1,11 @@
 <!DOCTYPE HTML>
 <html>
 </head>
-<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+
+  <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
@@ -43,7 +45,72 @@
   </nav>
 
 
+  <div class="container" style="width: 70%; max width: 300%;text-align:start;">
+    <div class="panel panel-default" style="background-color:lightgrey;" >
+      <div class="panel-body">
+        <p>
+          <h2 align="center">Build your own Skypaper</h2>
+        </p>
+        <p>
+          <h3>How to Login</h3>
+        </p>
+        <p>
+          <ul>
+            <li> For authentication on Skypaper please click the Login Button.</li>
+            <li> You will be redirected to Google, where you can enter your Google username and your Google password.</li>
+          </ul>
 
+        </p>
+        <p>
+          <h3>How to publish a paper</h3>
+        </p>
+        <p>
+          <ul>
+            <li> Before publishing your paper, you must make some changes to your LaTeX file.</li>
+          </ul>
+          <ul>
+            <ul>
+              <li> To insert your images and other files, you must insert at each location in the LaTeX file, where for example an image is to be inserted, this certain tag: ":!:"</li>
+              <li> Behind this tag you have to insert the file name with the appropriate file extension</li>
+              <li> An Example: If you want to insert a picture in your LaTeX file, then you have to include this: ":!:myPicture.tiff" at the appropriate spot in your LaTeX code.</li>
+            </ul>
+          </ul>
+          <ul>
+            <li> Once authenticated, you can click the Publish Button for uploading your own paper.</li>
+            <li> In the window that opens, you can give your paper a title, add the authors name and choose the actual date for your publication.</li>
+            <li> In the first file explorer you can choose your LaTeX document from your files.</li>
+            <li> Afterwards you can choose in the second file explorer all data which need to be included for your LaTeX document, as</li>
+          </ul>
+          <ul>
+            <ul>
+              <li>GeoJSON files for vector data (.json),</li>
+              <li>GeoTIFF  files for raster data (.tiff), </li>
+              <li>RData files for time series (as .zoo or .xts objects) and </li>
+              <li>spatial data (as .sp objects)</li>
+            </ul>
+          </ul>
+          <ul>
+            <li> Click Upload and you're done.</li>
+            <li> Now your paper will be uploaded, which could take a few seconds.</li>
+          </ul>
+        </p>
+        <p>
+          <h3>How to search a paper</h3>
+        </p>
+        <p>
+          When you are looking for a previously published paper, you must enter a search term like the authors name, the title of the paper<br>
+          or the release date in the appropriate box on homepage.
+        </p>
+        <p>
+          <h3>How to Logout from Skypaper</h3>
+        </p>
+        <p>
+          When you're done and want to logout from Skypaper you only need to click the Logout Butten in the upper right corner and you will be logged out.
+        </p>
+
+      </div>
+    </div>
+  </div>
 
 </body>
 

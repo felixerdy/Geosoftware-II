@@ -12,6 +12,7 @@
     "leaflet": "~0.7.7",
     "tablesorter": "jquery.tablesorter#~2.24.6",
     "Flot": "flot#~0.8.3",
-    "moment": "~2.11.1"
+    "moment": "~2.11.1",
+    "polarmap.js": "polarmap#~1.1.0"
   }
 }
