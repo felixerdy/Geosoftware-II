@@ -178,6 +178,13 @@ $(document).ready(function() {
               flotData.push(tempFlotSchema);
             }
 
+            // defining colors for flot
+            var i = 0;
+        		$.each(flotData, function(key, val) {
+        			val.color = i;
+        			++i;
+        		});
+
             if (isDate) { //set x-axis to time format
               $.plot('#' + elementID, flotData, {
                 zoom: {
@@ -211,6 +218,64 @@ $(document).ready(function() {
               });
             }
 
+            // adding checkbox after flot container
+            $('<p id="choices_' + elementID + '" style="right;">').insertAfter($('#' + elementID));
+        		$.each(flotData, function(key, val) {
+        			$('#choices_' + elementID).append("  <input type='checkbox' name='" + key +
+        				"' checked='checked' id='id" + key + "" + elementID + "'></input>" +
+        				"<label for='id" + key + "" + elementID + "'>"
+        				+ val.label + "</label>");
+        		});
+
+            $('#choices_' + elementID).find("input").click(plotAccordingToChoices);
+
+        		function plotAccordingToChoices() {
+        			var data = [];
+
+        			$('#choices_' + elementID).find("input:checked").each(function () {
+        				var key = $(this).attr("name");
+        				if (key && flotData[key]) {
+        					data.push(flotData[key]);
+        				}
+        			});
+
+        			if (data.length > 0) {
+                if (isDate) { //set x-axis to time format
+                  $.plot('#' + elementID, data, {
+                    zoom: {
+                      interactive: true
+                    },
+                    pan: {
+                      interactive: true
+                    },
+                    xaxis: {
+                      mode: "time"
+                    },
+                    series: {
+                      lines: {
+                        show: true
+                      }
+                    }
+                  });
+                } else { //working with indices or other formats -> x-axis is not a time format
+                  $.plot('#' + elementID, data, {
+                    zoom: {
+                      interactive: true
+                    },
+                    pan: {
+                      interactive: true
+                    },
+                    series: {
+                      lines: {
+                        show: true
+                      }
+                    }
+                  });
+                }
+        			}
+        		}
+
+        		plotAccordingToChoices();
           },
           statusCode: {
             404: function() {
