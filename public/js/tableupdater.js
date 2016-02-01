@@ -66,37 +66,93 @@ $(document).ready(function() {
   });
 });
 
-function updateTable() {
+/**
+ *  @desc fills the main page table with papers
+ *  @param content array of papers
+ */
+function fillTable(paperArray) {
+  $('#paperTable tr').remove();
+  for (var publication_index = 0; publication_index < paperArray.length; publication_index++) {
+    var d = new Date(paperArray[publication_index].publicaton_date);
 
-  // polyfill from http://stackoverflow.com/questions/1420881/how-to-extract-base-url-from-a-string-in-javascript
-  if (typeof location.origin === 'undefined') location.origin = location.protocol + '//' + location.host;
-  $.ajax({
-    url: location.origin + '/getPapers',
-    type: 'GET',
-    dataType: 'JSON',
-    timeout: 10000,
-    success: function(content, textStatus) {
-      $('#paperTable tr').remove();
-      for (var publication_index = 0; publication_index < content.length; publication_index++) {
-        var d = new Date(content[publication_index].publicaton_date);
-        
-        var stateMessage = "";
-        if(content[publication_index].processing_state < 1) {
-          stateMessage = (content[publication_index].processing_state < 0 ? " (conversion error: " + content[publication_index].processing_state + ")" : " (processing... please reload)");
-        }
-
-        $('#paperTable').append('<tr>' +
-          '<td>' + content[publication_index].author + '</td>' +
-          '<td><a href="paperpage.html#' + content[publication_index]._id + '">'  + content[publication_index].title + stateMessage + '</a></td>' +
-          '<td>' + ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth()+1)).slice(-2) + '/' + d.getFullYear() + '</td>' +
-          '<td>' + content[publication_index].search_terms + '</td>' +
-          '</tr>');
-
-      }
-      $("#paperTable").trigger("update");
-    },
-    error: function(xhr, textStatus, errorThrown) {
-      console.log("unable to get database content (" + errorThrown + ")");
+    var stateMessage = "";
+    if(paperArray[publication_index].processing_state < 1) {
+      stateMessage = (paperArray[publication_index].processing_state < 0 ? " (conversion error: " + paperArray[publication_index].processing_state + ")" : " (processing... please reload)");
     }
-  })
+
+    $('#paperTable').append('<tr>' +
+      '<td>' + paperArray[publication_index].author + '</td>' +
+      '<td><a href="paperpage.html#' + paperArray[publication_index]._id + '">'  + paperArray[publication_index].title + stateMessage + '</a></td>' +
+      '<td>' + ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth()+1)).slice(-2) + '/' + d.getFullYear() + '</td>' +
+      '<td>' + paperArray[publication_index].search_terms + '</td>' +
+      '</tr>');
+  }
+  $("#paperTable").trigger("update");
+}
+
+/**
+ * @desc get papers from server and start fillingTable with recieved content
+ * @param user to show published papers of user, leave empty to show all papers
+ */
+function updateTable(user) {
+  $('#username-above-table-container').remove(); // remove caption above table
+  if(user) {
+    // polyfill from http://stackoverflow.com/questions/1420881/how-to-extract-base-url-from-a-string-in-javascript
+    if (typeof location.origin === 'undefined') location.origin = location.protocol + '//' + location.host;
+    $.ajax({
+      url: location.origin + '/getPapersByGoogleID?id=' + user.googleID,
+      type: 'GET',
+      dataType: 'JSON',
+      timeout: 10000,
+      success: function(content, textStatus) {
+        if(content.length == 0) { //user has no uploaded papers
+          toastr.info('Click the "Publish"-Button to upload your first paper!');
+        } else {
+          // add caption above table
+          $('<div class="container" id="username-above-table-container" style="width: 70%; max width: 70%;">' +
+            '<div style="text-align:center">' +
+              '<h3>Papers of ' + user.name + '</h3>' +
+              '<button type="button" class="btn btn-info" onclick="updateTable()">back to all papers</button>' +
+            '</div>' +
+          '<br>' +
+          '</div>').insertAfter('#desc-container');
+          fillTable(content);
+        }
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        console.log("unable to get database content (" + errorThrown + ")");
+      }
+    });
+
+  } else { // there is no given user, show all papers
+    if (typeof location.origin === 'undefined') location.origin = location.protocol + '//' + location.host;
+    $.ajax({
+      url: location.origin + '/getPapers',
+      type: 'GET',
+      dataType: 'JSON',
+      timeout: 10000,
+      success: function(content, textStatus) {
+        fillTable(content);
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        console.log("unable to get database content (" + errorThrown + ")");
+      }
+    })
+  }
+}
+
+/**
+ * @desc get logged in user and start updating table
+ *
+ */
+function appendUsersPublications() {
+  $.ajax({
+    url: location.origin + '/getLoggedInUser',
+    type: 'GET',
+    success: function(content, textStatus) {
+      if (content) {
+        updateTable(content);
+      }
+    }
+  });
 }

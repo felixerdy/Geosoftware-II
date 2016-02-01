@@ -179,7 +179,7 @@ app.post('/addPaper', paperupload, function(req, res) {
         paper.rData_path.push(path.join(paperpath, paperid, "rdata", req.files["otherfiles"][fileno].originalname));
 
 
-        // only working with zoo files
+        // start conversion for RData
         var spawn = require('child_process').spawn;
         var rConvert = spawn("Rscript", ["--vanilla", process.cwd() + '/RDataConversion.R', path.join(paperpath, paperid, "rdata", req.files["otherfiles"][fileno].originalname)]);
         rConvert.on('exit', function(code) {
@@ -329,6 +329,17 @@ app.get('/getTiffById', function(req, res) {
   })
 });
 
+app.get('/getPapersByGoogleID', function(req, res) {
+  Paper.find({'publisher': req.query.id}, function(err, value) {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.json(value);
+      res.end();
+    }
+  })
+});
+
 app.get('/deletePaper', function(req, res) {
   Paper.findById(req.query.id, function(err, value) {
     if (err) {
@@ -374,7 +385,7 @@ app.get('/deletePaper', function(req, res) {
 
 
 /**
- * Authentification
+ * Authentication
  *
  */
 
