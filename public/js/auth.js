@@ -7,7 +7,6 @@ $(document).ready(function() {
     type: 'GET',
     success: function(content, textStatus) {
       if (content) {
-        console.log(content);
         $('#mainPageUploadButton').removeClass('disabled');
         /**
         $('#loginButton').text('Logout');
@@ -17,10 +16,10 @@ $(document).ready(function() {
           '<div class="dropdown">' +
   '<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">' +
     content.name +
-    '<span class="caret"></span>' +
+    ' <span class="caret"></span>' +
   '</button>' +
   '<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">' +
-    '<li><a href="#">Show own publications</a></li>' +
+    '<li><a href="#" onclick="appendUsersPublications()">Show own publications</a></li>' +
     '<li role="separator" class="divider"></li>' +
     '<li><a href="#" onclick="loginOrLogout()">Logout</a></li>' +
   '</ul>' +

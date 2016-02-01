@@ -327,7 +327,7 @@ function addDropdownToMap(displayedMap) {
     '<div class="modal-content">' +
     '<div class="modal-header">' +
     '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-    '<h4 class="modal-title">Custom CRS ' + displayedMap._leaflet_id + '</h4>' +
+    '<h4 class="modal-title">Custom CRS</h4>' +
     '</div>' +
     '<div class="modal-body">' +
     '<div class="row"><div class="col-md-2"><p>EPSG: </p></div><div class="col-md-10"><input class="form-control" id="epsgInput_' + displayedMap._leaflet_id + '" placeholder="e.g. 4326"></div></div>' +
