@@ -43,7 +43,7 @@ With node Server.js one starts the server, which is available under port 8080.
   Before publishing your paper, you must make some changes to your LaTeX file.
 
   - To insert your files, you must insert at each location in the LaTeX file, where for example an image is to be inserted,
-    this certain tag: ":!:"
+    this certain tag: ":!:" ![Beispiel Tag](/public/images/Beispiel-tag.JPG "Tag")
   - Behind this tag you have to insert the file name with the appropriate file extension
   - An Example: If you want to insert a .tif file in your LaTeX file, then you have to include this: ":!:myImage.tif" 
     at the appropriate spot in your LaTeX code.
