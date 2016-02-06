@@ -7,6 +7,8 @@ var paperPublisher = 0;
 $(document).ready(function() {
   var id = window.location.hash.substring(1);
 
+  $('#paperDownloadButton').attr('onclick', 'window.location="/' + id + '.zip"');
+
   // polyfill from http://stackoverflow.com/questions/1420881/how-to-extract-base-url-from-a-string-in-javascript
   if (typeof location.origin === 'undefined') location.origin = location.protocol + '//' + location.host;
 
@@ -28,10 +30,10 @@ $(document).ready(function() {
   $.get(location.origin + '/getLoggedInUser', function(data, textStatus, jqXHR) {
     if (data.googleID == paperPublisher) {
       // user is the publisher, allow to delete paper
-      $('#papereditbutton').removeClass('disabled');
+      $('#papereditbutton').removeClass('hidden');
     } else {
       // user is not the publisher
-      $('#papereditbutton').addClass('disabled');
+      $('#papereditbutton').addClass('hidden');
       $('#papereditbutton').prop('title', 'You are not authorized to delete this paper');
     }
   });

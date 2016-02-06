@@ -2,19 +2,6 @@
 <html>
 
 <head>
-<!--  <link rel="stylesheet" href="js/bowerstuff/leaflet/dist/leaflet.css">
-  <link rel="stylesheet" href="js/bowerstuff/bootstrap/dist/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-  <link rel="stylesheet" href="js/bowerstuff/bootstrap/dist/css/bootstrap-theme.css">
-  <link rel="stylesheet" href="js/bowerstuff/bootstrap-datepicker/dist/css/bootstrap-datepicker3.standalone.css">
-  <link rel="stylesheet" href="js/bowerstuff/tablesorter/dist/css/jquery.tablesorter.pager.min.css">
-  <script src="js/bowerstuff/jquery/dist/jquery.min.js"></script>
-  <script src="js/bowerstuff/bootstrap/dist/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
-  <script src="js/bowerstuff/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-  <script src="js/bowerstuff/leaflet/dist/leaflet.js"></script>
-  <script src="js/bowerstuff/tablesorter/dist/js/jquery.tablesorter.js"></script>
-  <script src="js/bowerstuff/tablesorter/dist/js/jquery.tablesorter.widgets.js"></script>
-  <script src="js/bowerstuff/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js"></script>
--->
 <link rel="stylesheet" href="js/bowerstuff/leaflet/dist/leaflet.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
 <link rel="stylesheet" href="css/theme.bootstrap.css">
@@ -28,6 +15,9 @@
 <script src="js/bowerstuff/tablesorter/dist/js/jquery.tablesorter.js"></script>
 <script src="js/bowerstuff/tablesorter/dist/js/jquery.tablesorter.widgets.js"></script>
 <script src="js/bowerstuff/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
 </head>
 
 <body>
@@ -42,11 +32,6 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <!--
-        <a class="navbar-brand" href="index.html">
-          <img src="images/icon.png" alt="Skypaper" style="height: 20px;">
-        </a>
-      -->
       </div>
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -61,9 +46,8 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li>
-            <div id='loginLogoutDiv'>
-
-            </div>
+                <div id='loginLogoutDiv'>
+                </div>
           </li>
         </ul>
 
@@ -74,10 +58,10 @@
   </nav>
 
 
-  <div class="container" style="width: 70%; max width: 70%;">
+  <div class="container" id='desc-container' style="width: 70%; max width: 70%;">
     <div class="panel panel-default">
       <div class="panel-body">
-        <p>Skypaper is a new way to distribute your geospatial publications. Start by searching for a publication in the table below or publish your own paper. See the documentation for information about the upload process.</p>
+        <p>SkyPaper is a new way to distribute your geospatial publications. Start by searching for a publication in the table below or publish your own paper. See the <a href='documentation.html'>documentation</a> for information about the upload process.</p>
         <p style="text-align: center;"><a class="btn btn-default" id='mainPageUploadButton' data-toggle="modal" data-target="#paperUploadModal">Publish</a></p>
 
       </div>
@@ -205,6 +189,12 @@
         <div class="modal-footer">
           <button type="button" id="uploadButton" class="btn btn-success">Upload</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+        <div class='container'>
+      		<div id="loadingWheel" class='hide'>
+            <img src='images/default.gif' height='45' width='45'></img>
+          </div>
+      		<div id = "uploadText" class="hide">Please wait while uploading... This may take a few minutes...</div>
         </div>
       </div>
     </div>
