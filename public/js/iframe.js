@@ -4,6 +4,82 @@ var maps = [];
 var plots = [];
 var thisPaper = undefined;
 
+// colors for flot datasets
+var colors = {
+	'default': {
+		label: 'default'
+	},
+	'spectrum14': {
+		label: 'spectrum 14',
+		colorset: [
+			'#ecb796',
+			'#dc8f70',
+			'#b2a470',
+			'#92875a',
+			'#716c49',
+			'#d2ed82',
+			'#bbe468',
+			'#a1d05d',
+			'#e7cbe6',
+			'#d8aad6',
+			'#a888c2',
+			'#9dc2d3',
+			'#649eb9',
+			'#387aa3'
+		].reverse()
+	},
+	'spectrum9': {
+		label: 'spectrum 9',
+		colorset: [
+			'#423d4f',
+			'#4a6860',
+			'#848f39',
+			'#a2b73c',
+			'#ddcb53',
+			'#c5a32f',
+			'#7d5836',
+			'#963b20',
+			'#7c2626',
+			'#491d37',
+			'#2f254a'
+		].reverse()
+	},
+	'munin': {
+		label: 'munin',
+		colorset: [
+			'#00cc00',
+			'#0066b3',
+			'#ff8000',
+			'#ffcc00',
+			'#330099',
+			'#990099',
+			'#ccff00',
+			'#ff0000',
+			'#808080',
+			'#008f00',
+			'#00487d',
+			'#b35a00',
+			'#b38f00',
+			'#6b006b',
+			'#8fb300',
+			'#b30000',
+			'#bebebe',
+			'#80ff80',
+			'#80c9ff',
+			'#ffc080',
+			'#ffe680',
+			'#aa80ff',
+			'#ee00cc',
+			'#ff8080',
+			'#666600',
+			'#ffbfff',
+			'#00ffcc',
+			'#cc6699',
+			'#999900'
+		]
+	}
+};
+
 /**
  * @returns the layer object, optional
  */
@@ -219,13 +295,26 @@ $(document).ready(function() {
             }
 
             // adding checkbox after flot container
-            $('<p id="choices_' + elementID + '" style="right;">').insertAfter($('#' + elementID));
+            $('<p id="choices_' + elementID + '" style="right;">Datasets: </p>').insertAfter($('#' + elementID));
         		$.each(flotData, function(key, val) {
-        			$('#choices_' + elementID).append("  <input type='checkbox' name='" + key +
+        			$('#choices_' + elementID).append(" <input type='checkbox' name='" + key +
         				"' checked='checked' id='id" + key + "" + elementID + "'></input>" +
         				"<label for='id" + key + "" + elementID + "'>"
         				+ val.label + "</label>");
-        		});
+            });
+
+            // adding radiobuttons to change color after flot container
+            $('<form id="colorChoices_' + elementID + '" style="right;">Colors: </form>').insertAfter($('#' + elementID));
+            var colorContainer = $('#colorChoices_' + elementID );
+      			var first = true;
+      			$.each(colors, function(key, val) {
+      				if (first) { // first radiobutton is checked
+      					colorContainer.append('<input type="radio" checked name="color" value="' + key + '"> ' + key);
+      					first = false;
+      				} else {
+      					colorContainer.append(' <input type="radio" name="color" value="' + key + '"> ' + key);
+      				}
+      			});
 
             $('#choices_' + elementID).find("input").click(plotAccordingToChoices);
 
@@ -275,7 +364,59 @@ $(document).ready(function() {
         			}
         		}
 
+            $('#colorChoices_' + elementID).find("input").click(plotAccordingToColors);
+
+      			function plotAccordingToColors() {
+      				var data = [];
+
+              $('#choices_' + elementID).find("input:checked").each(function () {
+        				var key = $(this).attr("name");
+        				if (key && flotData[key]) {
+        					data.push(flotData[key]);
+        				}
+        			});
+
+      				var key = $(this).attr("value");
+      				setColors(data, key);
+
+      				if (data.length > 0) {
+                if (isDate) { //set x-axis to time format
+                  $.plot('#' + elementID, data, {
+                    zoom: {
+                      interactive: true
+                    },
+                    pan: {
+                      interactive: true
+                    },
+                    xaxis: {
+                      mode: "time"
+                    },
+                    series: {
+                      lines: {
+                        show: true
+                      }
+                    }
+                  });
+                } else { //working with indices or other formats -> x-axis is not a time format
+                  $.plot('#' + elementID, data, {
+                    zoom: {
+                      interactive: true
+                    },
+                    pan: {
+                      interactive: true
+                    },
+                    series: {
+                      lines: {
+                        show: true
+                      }
+                    }
+                  });
+                }
+      				}
+      			}
+
         		plotAccordingToChoices();
+            plotAccordingToColors();
           },
           statusCode: {
             404: function() {
@@ -450,4 +591,20 @@ function changeProjection(targetProjection, leafletID, epsg, proj4, tileLayer, i
     'map': myMap,
     'data': myData
   };
+}
+
+function setColors(data, schema) {
+	var i = 0;
+	if (!schema || colors[schema].colorset == undefined) {
+		$.each(data, function(key, val) {
+			val.color = i;
+			++i;
+		});
+	} else {
+		var tempColor = colors[schema];
+		$.each(data, function(key, val) {
+			val.color = tempColor.colorset[i];
+			++i;
+		});
+	}
 }
