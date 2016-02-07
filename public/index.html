@@ -12,6 +12,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 <script src="js/bowerstuff/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script src="js/bowerstuff/leaflet/dist/leaflet.js"></script>
+<script src="js/jasny-bootstrap.min.js"></script>
 <script src="js/bowerstuff/tablesorter/dist/js/jquery.tablesorter.js"></script>
 <script src="js/bowerstuff/tablesorter/dist/js/jquery.tablesorter.widgets.js"></script>
 <script src="js/bowerstuff/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js"></script>
@@ -71,7 +72,7 @@
 
 
   <div class="container-fluid" style="width: 70%; max width: 70%">
-    <table>
+    <table class="table table-striped table-bordered table-hover">
       <!-- bootstrap classes added by the uitheme widget -->
       <!--table head -->
       <thead>
@@ -102,7 +103,7 @@
           </th>
         </tr>
       </tfoot>
-      <tbody id="paperTable">
+      <tbody id="paperTable" data-link="row" class="rowlink">
         <!-- content of paperTable -->
         <tr>
           <td></td>

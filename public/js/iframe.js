@@ -309,9 +309,9 @@ adds the Bootstrap dropdown menu under each geoJson map
 there is also a modal added
 */
 function addDropdownToMap(displayedMap) {
-  $('<br><div class="dropdown">' +
+  $('<br><div class="dropdown" style="z-index: 10000;">' +
     '<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu_' + displayedMap._leaflet_id + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">' +
-    'Change Projection' +
+    'Change Projection ' +
     '<span class="caret"></span>' +
     '</button>' +
     '<ul class="dropdown-menu" aria-labelledby="dropdownMenu">' +
