@@ -31,9 +31,14 @@ node_modules
 uploadcache
 # the paper folder
 papers
+#js-import stuff
+public/js/bowerstuff
 
 # Optional npm cache directory
 .npm
 
 # Optional REPL history
 .node_repl_history
+
+# private keys
+keys.js

@@ -1,39 +1,50 @@
 "use strict"
-$(document).ready(function() {
-  var url = window.location.href;
-  var id = url.substring(url.lastIndexOf('#') + 1);
 
-  $.get('http://localhost:8080/getPaperById', {'id' : id}, function(data, textStatus, jqXHR) {
+// publishers googleID of the displayed paper
+var paperPublisher = 0;
+
+// loads the HTML file into the iframe
+$(document).ready(function() {
+  var id = window.location.hash.substring(1);
+
+  $('#paperDownloadButton').attr('onclick', 'window.location="/' + id + '.zip"');
+
+  // polyfill from http://stackoverflow.com/questions/1420881/how-to-extract-base-url-from-a-string-in-javascript
+  if (typeof location.origin === 'undefined') location.origin = location.protocol + '//' + location.host;
+
+  $.get(location.origin + '/getPaperById?id=' + id, function(data, textStatus, jqXHR) {
     $('#papertitle').append(data.title);
     var d = new Date(data.publicaton_date);
-    //let y = d.getFullYear();
-    //let m = d.getMonth() + 1; // 0 - 11
-    //let t = d.getDate();
-    $('#paperdate').append(('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth()+1)).slice(-2) + '/' + d.getFullYear());
+    $('#paperdate').append(('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth() + 1)).slice(-2) + '/' + d.getFullYear());
     $('#paperauthor').append(data.author);
-    
+
     var iframeurl = data.htmlCode;
     iframeurl = iframeurl.split("/tex/");
-    
-    $('#paperframe').load(function() {
 
-      //replace tags: 
-      //current tag form "[...] :!:myData.tif [...]"
-      var positions = []; //array for indices of the tags occurrence
-      var includedData = []; //array for names of the includedData (e.g.: ::myData.tif)
+    $('#paperframe')[0].src = id + "/tex/" + iframeurl[1];
 
-      var regexp = /:!:([^\s]+)\s/g;	//regular expression for current tagForm 
-      var tempHtml = $('#paperframe').contents().find('html').html();
-	    tempHtml = tempHtml.replace(regexp, "</p><div class='replaceable' id='$1'></div><p class='ltx_p'>"); 		
+    // sets publishers googleID of the displayed paper in paperPublisher
+    paperPublisher = data.publisher;
+  }, 'json');
 
-      //set content of iframe to new html 
-      var iframe = document.getElementById('paperframe');
-      var iframedoc = iframe.contentDocument || iframe.contentWindow.document;
-      iframedoc.body.innerHTML = tempHtml; 
-    });
-
-    $('#paperframe')[0].src = iframeurl[1];
-
-	}, 'json');
-	
+  $.get(location.origin + '/getLoggedInUser', function(data, textStatus, jqXHR) {
+    if (data.googleID == paperPublisher) {
+      // user is the publisher, allow to delete paper
+      $('#papereditbutton').removeClass('hidden');
+    } else {
+      // user is not the publisher
+      $('#papereditbutton').addClass('hidden');
+      $('#papereditbutton').prop('title', 'You are not authorized to delete this paper');
+    }
+  });
 });
+
+function deletePaper() {
+  var id = window.location.hash.substring(1);
+
+  $.get(location.origin + '/deletePaper?id=' + id, function(data, textStatus, jqXHR) {
+    window.location = "index.html";
+  });
+
+
+}
