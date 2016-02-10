@@ -50,10 +50,10 @@ $("#uploadButton").click(function() {
     // Change button and text... They get changed back in error() and success().
     $('#uploadButton').addClass("disabled");
     $('#uploadButton').html("Uploading...");
-	  $('#uploadText').removeClass("hide");
+    $('#uploadText').removeClass("hide");
 
 	var target = $('#loadingWheel');
-  target.removeClass('hide');
+    target.removeClass('hide');
 
 
 
