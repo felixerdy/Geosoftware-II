@@ -75,17 +75,17 @@ function fillTable(paperArray) {
   for (var publication_index = 0; publication_index < paperArray.length; publication_index++) {
     var d = new Date(paperArray[publication_index].publicaton_date);
 
-    var stateMessage = "";
-    if(paperArray[publication_index].processing_state < 1) {
-      stateMessage = (paperArray[publication_index].processing_state < 0 ? " (conversion error: " + paperArray[publication_index].processing_state + ")" : " (processing... please reload)");
-    }
+    
+	//only show already processed papers 
+    if(paperArray[publication_index].processing_state == 1) {     
 
-    $('#paperTable').append('<tr>' +
-      '<td>' + paperArray[publication_index].author + '</td>' +
-      '<td><a href="paperpage.html#' + paperArray[publication_index]._id + '">'  + paperArray[publication_index].title + stateMessage + '</a></td>' +
-      '<td>' + ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth()+1)).slice(-2) + '/' + d.getFullYear() + '</td>' +
-      '<td>' + paperArray[publication_index].search_terms + '</td>' +
-      '</tr>');
+		$('#paperTable').append('<tr>' +
+		  '<td>' + paperArray[publication_index].author + '</td>' +
+		  '<td><a href="paperpage.html#' + paperArray[publication_index]._id + '">'  + paperArray[publication_index].title + '</a></td>' +
+		  '<td>' + ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth()+1)).slice(-2) + '/' + d.getFullYear() + '</td>' +
+		  '<td>' + paperArray[publication_index].search_terms + '</td>' +
+		  '</tr>');
+	}
   }
   $("#paperTable").trigger("update");
 }
