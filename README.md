@@ -2,32 +2,42 @@
 ###### Softwareprojekt Geosoftware II - WWU Münster - Gruppe 4
 
 
-### Installation:
 
-##### System Requirements:
+
+#### System Requirements:
 In theory, the software should run on any Linux-based server system.
 Only the installation of Ubuntu Server 14.04.3 LTS is described as only this system was tested.
 
-    1. MongoDB has to be installed. Recommended here is at least version 3, an installation guide 
-       can be found at https://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu
+### Installation:
 
-    2. R with the normal basic packages is needed. This is Ubuntu package r-base.
-       In addition, the R-packages r-gdal and xts must be installed.
+1. Install MongoDB. Recommended here is at least version 3, an installation guide 
+   can be found at https://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu
 
-    3. Node.JS has to be installed. It is recommended to use at least version 4 LTS.
+2. Install R with Ubuntu package r-base.
+   In addition, the R-packages r-gdal and xts must be installed.
+   R commands for this are: `install.packages("r-gdal")` and 
+   `install.packages("xts")`
+   
 
-    4. LatexML has to be installed. At least version 8.1 is required because only from this version
-       adequate HTML can be generated.
-       To install, the guide "Installing tarball" (http://dlmf.nist.gov/LaTeXML/get.html) was used,
-       first, however, under "Installing prerequisites" section (for Ubuntu under "Debian-based systems")
-       packages must be installed.
+3. Install Nodejs. It is recommended to use at least version 4 LTS.
 
-    5. The package manager bower must be installed. This can be done via sudo npm install -g bower.
+4. Install LaTeXML. At least version 8.1 is required because only from this version
+   adequate HTML can be generated.
+   - Install the packages as described in the "Installing prerequisites"-section 
+     (for Ubuntu under "Debian-based systems") at http://dlmf.nist.gov/LaTeXML/get.html. 
+   - Follow the guide "Installing tarball" on the same page. 
 
-    6. Last you need to install the project itself. Therefore one must go to the directory and run
-      "npm install" and "bower install".
+5. The package manager bower must be installed. This can be done via sudo npm install -g bower.
 
-With node Server.js one starts the server, which is available under port 8080.
+6. Last you need to install the direct dependencies for the project. Therefore go to the directory and run
+  "npm install" and "bower install".
+
+### Start Skypaper:
+1. Start your mongoDB
+
+2. Start the server using `node Server.js`.
+
+3. The application is available under port 8080.
 
 
 
