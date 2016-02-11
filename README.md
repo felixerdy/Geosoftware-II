@@ -6,7 +6,7 @@
 
 #### System Requirements:
 In theory, the software should run on any Linux-based server system.
-Only the installation of Ubuntu Server 14.04.3 LTS is described as only this system was tested.
+Only the installation on Ubuntu 14.04.3 LTS and Ubuntu Server 14.04.3 LTS is described as only this systems were tested.
 
 ### Installation:
 
