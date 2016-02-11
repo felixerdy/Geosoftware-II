@@ -29,8 +29,20 @@ Only the installation of Ubuntu Server 14.04.3 LTS is described as only this sys
 
 5. The package manager bower must be installed. This can be done via sudo npm install -g bower.
 
-6. Last you need to install the direct dependencies for the project. Therefore go to the directory and run
+6. Install the direct dependencies for the project. Therefore go to the directory and run
   "npm install" and "bower install".
+
+7. Finally create a keys.js in the root directory of the project with following content: 
+   ```javascript
+   var keys = {};
+ 
+ 
+   keys.clientID = 'yourClientID';
+   keys.clientSecret = 'yourClientSecret';
+ 
+   module.exports = keys; 
+   ```
+   Replace 'yourClientID' and 'yourClientSecret' with your own Google ClientID and ClientSecret. 
 
 ### Start Skypaper:
 1. Start your mongoDB
