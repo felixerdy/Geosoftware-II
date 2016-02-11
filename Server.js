@@ -45,8 +45,8 @@ passport.use(new StrategyGoogle({
     clientSecret: keys.clientSecret,
     callbackURL: "/auth/google/callback"
   },
-  function(iss, sub, profile, accessToken, refreshToken, done) {
-    //check user table for anyone with a facebook ID of profile.id
+  function(iss, sub, profile, accessToken, refreshToken, done) {    
+    //check user table for anyone with a google ID of profile.id    
     User.findOne({
       'googleID': profile.id
     }, function(err, user) {
@@ -57,7 +57,7 @@ passport.use(new StrategyGoogle({
       if (!user) {
         user = new User({
           googleID: profile.id,
-          name: profile.displayName
+          name: profile.displayName          
         });
         user.save(function(err) {
           if (err) console.log(err);
@@ -388,7 +388,9 @@ app.get('/deletePaper', function(req, res) {
  */
 
 app.get('/auth/google',
-  passport.authenticate('google-openidconnect'));
+  passport.authenticate('google-openidconnect', { 	
+	   scope:[ 'profile' ]	
+  }));
 
 app.get('/auth/google/callback',
   passport.authenticate('google-openidconnect', {
