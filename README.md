@@ -42,7 +42,8 @@ Only the installation of Ubuntu Server 14.04.3 LTS is described as only this sys
  
    module.exports = keys; 
    ```
-   Replace 'yourClientID' and 'yourClientSecret' with your own Google ClientID and ClientSecret. 
+   Replace 'yourClientID' and 'yourClientSecret' with your own Google ClientID
+   and ClientSecret (see [google developers console](https://console.developers.google.com/)) 
 
 ### Start Skypaper:
 1. Start your mongoDB
