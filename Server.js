@@ -33,17 +33,17 @@ app.use(express.static('./public'));
 // Adds paper directory...
 app.use(express.static('./papers'));
 
+// Set up authentication 
 app.use(session({
   secret: 'anything'
 }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-//TODO change localhost in callbackURL to something hostname
 passport.use(new StrategyGoogle({
     clientID: keys.clientID,
     clientSecret: keys.clientSecret,
-    callbackURL: "http://localhost:8080/auth/google/callback"
+    callbackURL: "/auth/google/callback"
   },
   function(iss, sub, profile, accessToken, refreshToken, done) {
     //check user table for anyone with a facebook ID of profile.id
@@ -202,7 +202,6 @@ app.post('/addPaper', paperupload, function(req, res) {
         let tifpath = path.join(paperpath, paperid, "geotiff", req.files["otherfiles"][fileno].originalname);
 
         // convert image to png
-        // TODO: save multiple layer, if available
         let dataset = gdal.open(tifpath);
 
         gdal.drivers.get("PNG").createCopy(path.join(paperpath, paperid, "geotiff", path.basename(req.files["otherfiles"][fileno].originalname, path.extname(req.files["otherfiles"][fileno].originalname)) + ".png"), dataset);
@@ -211,7 +210,6 @@ app.post('/addPaper', paperupload, function(req, res) {
 
         // converting the offset into [minlat, minlon, maxlat, maxlon], assuming WGS84
         // based on http://stackoverflow.com/questions/2922532/obtain-latitude-and-longitude-from-a-geotiff-file
-        // TODO: checking if there is a less ad hoc method for this conversion
         let gt = dataset.geoTransform;
         let w = dataset.rasterSize.x;
         let h = dataset.rasterSize.y;
