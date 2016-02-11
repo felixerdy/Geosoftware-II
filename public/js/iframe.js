@@ -137,7 +137,6 @@ function createTiffLayer(map, dataID, paper) {
   }
 
   $.get(location.origin + '/getTiffById?id=' + id, function(tiffdbe, textStatus, jqXHR) {
-    //TODO: More than one layer...
     var imageUrl = "../geotiff/" + tiffdbe.pngpaths[0];
     var imageBounds = [
       [tiffdbe.coordinates[0], tiffdbe.coordinates[1]],
