@@ -1,7 +1,7 @@
 # Geosoftware-II
 ###### Softwareprojekt Geosoftware II - WWU Münster - Gruppe 4
 
-
+SkyPaper is a web application for publishing scientific paper. The publisher can add temporal/spatial data which will be visualized in the paper with the ability for readers to interact.
 
 
 #### System Requirements:
@@ -57,3 +57,7 @@ Only the installation on Ubuntu 14.04.3 LTS and Ubuntu Server 14.04.3 LTS is des
 ### How to use Skypaper
 
 see [doc.md](./doc.md)
+
+### License
+
+ISC
