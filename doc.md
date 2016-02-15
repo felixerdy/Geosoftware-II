@@ -2,12 +2,12 @@
 
 ##### How to Login
 
-  - For authentication on Skypaper please click the Login Button.
-  - You will be redirected to Google, where you can enter your Google username and your Google password.
+  - Use the login button for authentication with Google.
+  - A Google account is required to use Skypaper.
 
 #### How to publish a paper
 
-  Publications must be submitted as LaTeX-Format optionally with additional Data.
+  Publications need to be submitted as LaTeX files. Optionally, additional files like images or spatial/temporal data can be included    using the second file selector.
   Spatial Data will be visualized with Leaflet, Time series data with Flot.
 
 ###### Include temporal/spatial data for visualization 
@@ -31,17 +31,12 @@
 
   - Click Upload and you're done. It may take a few minutes to do all conversions.
   
-  - Check the paper for error tags. If necessary delete it and reupload a corrected version. 
+  - Check the paper for red colored error tags. If necessary delete it and reupload a corrected version. 
 
-#### How to search a paper
+#### How to show only paper uploaded by yourself
 
-  When you are looking for a previously published paper, you must enter a search term like the authors name, 
-  the title of the paper or the release date in the appropriate box on homepage.
-
-#### How to show your own papers
-
-  When you want to have a look on your own publications, you need to click the button in the upper right corner on which now your        username should be. 
-  Click on "Show your own publications".
+  If you want to have a look on your own publications, click the login button in the upper right corner after loggin in and select
+  "Show your own publications".
 
 #### How to delete a paper
 
