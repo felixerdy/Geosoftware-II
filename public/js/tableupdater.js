@@ -75,11 +75,11 @@ function fillTable(paperArray) {
   for (var publication_index = 0; publication_index < paperArray.length; publication_index++) {
     var d = new Date(paperArray[publication_index].publicaton_date);
 
-    
-	//only show already processed papers 
-    if(paperArray[publication_index].processing_state == 1) {     
 
-		$('#paperTable').append('<tr>' +
+	//only show already processed papers
+    if(paperArray[publication_index].processing_state == 1) {
+
+		$('#paperTable').prepend('<tr>' +
 		  '<td>' + paperArray[publication_index].author + '</td>' +
 		  '<td><a href="paperpage.html#' + paperArray[publication_index]._id + '">'  + paperArray[publication_index].title + '</a></td>' +
 		  '<td>' + ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth()+1)).slice(-2) + '/' + d.getFullYear() + '</td>' +
