@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 </head>
-
+  <meta charset="utf-8">
   <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
@@ -44,7 +44,7 @@
     <div class="panel panel-default" style="background-color:lightgrey;" >
       <div class="panel-body">
        <h3><a id="How_to_use_Skypaper_0"></a>How to use Skypaper</h3>
-        <h5><a id="How_to_Login_2"></a>How to Login</h5>
+        <h4><a id="How_to_Login_2"></a>How to Login</h4>
         <ul>
         <li>Use the login button for authentication with Google.</li>
         <li>A Google account is required to use Skypaper.</li>
@@ -52,7 +52,7 @@
         <h4><a id="How_to_publish_a_paper_7"></a>How to publish a paper</h4>
         <p>Publications need to be submitted as LaTeX files. Optionally, additional files like images or spatial/temporal data can be included using the second file chooser.
         Spatial data will be visualized with Leaflet, Time series data with Flot.</p>
-        <h6><a id="Include_temporalspatial_data_for_visualization_12"></a>Include temporal/spatial data for visualization</h6>
+        <h5><a id="Include_temporalspatial_data_for_visualization_12"></a>Include temporal/spatial data for visualization</h5>
         <ul>
         <li>
         <p>Supported file formats are TIFF, JSON and Rdata (only sp, zoo or xts objects)</p>
@@ -62,10 +62,10 @@
         Make sure you have added exactly the name of the file including the extension.</p>
         </li>
         </ul>
-        <p>Example: If you want to insert a .tif file, include: “:!:yourFileName.tif”
+        <p>Example: If you want to insert a .tif file, include <code>:!:yourFileName.tif</code>
         at the appropriate spot in your LaTeX code.
         <img src="/public/images/BeispielTag2.JPG" alt="Beispiel Tag" title="Tag"></p>
-        <h6><a id="Upload_process_22"></a>Upload process</h6>
+        <h5><a id="Upload_process_22"></a>Upload process</h5>
         <ul>
         <li>
         <p>It is strongly recommended to copy all files used in the paper in one directory before starting the upload process</p>
@@ -80,7 +80,7 @@
         <p>Select additional data such as images or temporal/spatial data as described above at the second file chooser.</p>
         </li>
         <li>
-        <p>Click <em>Upload</em> and you’re done. It may take a few minutes to do all conversions.</p>
+        <p>Click <em>Upload</em> and you're done. It may take a few minutes to do all conversions.</p>
         </li>
         <li>
         <p>Check the paper for red colored error tags. If necessary delete it and reupload a corrected version.</p>
