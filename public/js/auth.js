@@ -19,7 +19,7 @@ $(document).ready(function() {
     ' <span class="caret"></span>' +
   '</button>' +
   '<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">' +
-    '<li><a href="#" onclick="appendUsersPublications()">Show own publications</a></li>' +
+    '<li><a href="#" onclick="appendUsersPublications()">Show my publications</a></li>' +
     '<li role="separator" class="divider"></li>' +
     '<li><a href="#" onclick="loginOrLogout()">Logout</a></li>' +
   '</ul>' +

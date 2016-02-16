@@ -2,13 +2,13 @@
 
 ##### How to Login
 
-  - For authentication on Skypaper please click the Login Button.
-  - You will be redirected to Google, where you can enter your Google username and your Google password.
+  - Use the login button for authentication with Google.
+  - A Google account is required to use Skypaper.
 
 #### How to publish a paper
 
-  Publications must be submitted as LaTeX-Format optionally with additional Data.
-  Spatial Data will be visualized with Leaflet, Time series data with Flot.
+  Publications need to be submitted as LaTeX files. Optionally, additional files like images or spatial/temporal data can be included using the second file chooser.
+  Spatial data will be visualized with Leaflet, Time series data with Flot.
 
 ###### Include temporal/spatial data for visualization 
   - Supported file formats are TIFF, JSON and Rdata (only sp, zoo or xts objects)
@@ -16,32 +16,26 @@
   - Include the Skypaper tag `:!:` and your filename at every position you like to visualize data.
     Make sure you have added exactly the name of the file including the extension.
 
-   Example: If you want to insert a .tif file, include: ":!:yourFileName.tif" 
+   Example: If you want to insert a .tif file, include: `:!:yourFileName.tif`
    at the appropriate spot in your LaTeX code.
    ![Beispiel Tag](/public/images/BeispielTag2.JPG "Tag")
 
 ###### Upload process 
   - It is strongly recommended to copy all files used in the paper in one directory before starting the upload process
   
-  - Click the upload button and choose title, date, author(s) and search terms. A Value for each section is required.
+  - Click the upload button and choose title, date, author(s) and search terms. A value for each section is required.
   
-  - Select your main LaTeX document from your files at the first upload button.
+  - Select your main LaTeX document from your files at the first file chooser.
   
-  - Select every additional Data such as images or temporal/spatial data as described above at the second upload button.
+  - Select additional data such as images or temporal/spatial data as described above at the second file chooser.
 
-  - Click Upload and you're done. It may take a few minutes to do all conversions.
+  - Click *Upload* and you're done. It may take a few minutes to do all conversions.
   
-  - Check the paper for error tags. If necessary delete it and reupload a corrected version. 
+  - Check the paper for red colored error tags. If necessary delete it and reupload a corrected version. 
 
-#### How to search a paper
+#### How to show only paper uploaded by yourself
 
-  When you are looking for a previously published paper, you must enter a search term like the authors name, 
-  the title of the paper or the release date in the appropriate box on homepage.
-
-#### How to show your own papers
-
-  When you want to have a look on your own publications, you need to click the button in the upper right corner on which now your        username should be. 
-  Click on "Show your own publications".
+  If you want to have a look on your own publications, click the login button in the upper right corner after loggin in and select *Show my publications*.
 
 #### How to delete a paper
 
