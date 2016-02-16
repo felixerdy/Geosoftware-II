@@ -7,8 +7,8 @@
 
 #### How to publish a paper
 
-  Publications need to be submitted as LaTeX files. Optionally, additional files like images or spatial/temporal data can be included    using the second file selector.
-  Spatial Data will be visualized with Leaflet, Time series data with Flot.
+  Publications need to be submitted as LaTeX files. Optionally, additional files like images or spatial/temporal data can be included using the second file chooser.
+  Spatial data will be visualized with Leaflet, Time series data with Flot.
 
 ###### Include temporal/spatial data for visualization 
   - Supported file formats are TIFF, JSON and Rdata (only sp, zoo or xts objects)
@@ -23,20 +23,19 @@
 ###### Upload process 
   - It is strongly recommended to copy all files used in the paper in one directory before starting the upload process
   
-  - Click the upload button and choose title, date, author(s) and search terms. A Value for each section is required.
+  - Click the upload button and choose title, date, author(s) and search terms. A value for each section is required.
   
-  - Select your main LaTeX document from your files at the first upload button.
+  - Select your main LaTeX document from your files at the first file chooser.
   
-  - Select every additional Data such as images or temporal/spatial data as described above at the second upload button.
+  - Select additional data such as images or temporal/spatial data as described above at the second file chooser.
 
-  - Click Upload and you're done. It may take a few minutes to do all conversions.
+  - Click *Upload* and you're done. It may take a few minutes to do all conversions.
   
   - Check the paper for red colored error tags. If necessary delete it and reupload a corrected version. 
 
 #### How to show only paper uploaded by yourself
 
-  If you want to have a look on your own publications, click the login button in the upper right corner after loggin in and select
-  "Show your own publications".
+  If you want to have a look on your own publications, click the login button in the upper right corner after loggin in and select *Show my publications*.
 
 #### How to delete a paper
 
