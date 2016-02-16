@@ -41,7 +41,7 @@ function checkConversionStatus(paperID){
         $('#uploadText').addClass("hide");
         $('#uploadButton').html("Upload");
         $('#loadingWheel').addClass("hide");
-
+		deletePaperById(paperID);
         clearInterval(myInterval);
       }
     },
@@ -50,7 +50,11 @@ function checkConversionStatus(paperID){
     }
   });
 }
-
+function deletePaperById(paperID){
+	$.get(location.origin + '/deletePaper?id=' + paperID, function(data, textStatus, jqXHR) {
+	   console.log("delete corrupted paper: " + textStatus); 
+	});
+}
 $("#uploadButton").click(function() {
 
   // Prevent multiple form submissions.
