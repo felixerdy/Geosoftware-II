@@ -16,7 +16,7 @@
   - Include the Skypaper tag `:!:` and your filename at every position you like to visualize data.
     Make sure you have added exactly the name of the file including the extension.
 
-   Example: If you want to insert a .tif file, include: ":!:yourFileName.tif" 
+   Example: If you want to insert a .tif file, include: `:!:yourFileName.tif`
    at the appropriate spot in your LaTeX code.
    ![Beispiel Tag](/public/images/BeispielTag2.JPG "Tag")
 
