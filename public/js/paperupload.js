@@ -25,9 +25,28 @@ function checkConversionStatus(paperID){
         clearInterval(myInterval);
         toastr.success('upload finished');
       }
+
+      console.log(content.processing_state);
+      // close modal if latexml can't convert input
+      if(content.processing_state < 0){
+        var errorMessage = "unknown";
+        if(content.processing_state == -1)
+          errorMessage = "latexml conversion to xml failed";
+        if(content.processing_state == -2)
+          errorMessage = "latexml conversion to html failed";
+
+        alert("Upload failed! Reason: " + errorMessage);
+        $('#paperUploadModal').modal('hide');
+        $('#uploadButton').removeClass("disabled");
+        $('#uploadText').addClass("hide");
+        $('#uploadButton').html("Upload");
+        $('#loadingWheel').addClass("hide");
+
+        clearInterval(myInterval);
+      }
     },
     error: function(xhr, textStatus, errorThrown) {
-      
+
     }
   });
 }
