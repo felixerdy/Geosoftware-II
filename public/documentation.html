@@ -43,81 +43,54 @@
   <div class="container" style="width: 70%; max width: 300%;text-align:start;">
     <div class="panel panel-default" style="background-color:lightgrey;" >
       <div class="panel-body">
-        <p>
-          <h2 align="center">Build your own Skypaper</h2>
-        </p>
-        <p>
-          <h3>How to Login</h3>
-        </p>
-        <p>
-          <ul>
-            <li> For authentication on Skypaper please click the Login Button.</li>
-            <li> You will be redirected to Google, where you can enter your Google username and your Google password.</li>
-          </ul>
-
-        </p>
-        <p>
-          <h3>How to publish a paper</h3>
-        </p>
-        <p>
-          <ul>
-            <li> Before publishing your paper, you must make some changes to your LaTeX file.</li>
-          </ul>
-          <ul>
-            <ul>
-              <li> To insert your files, you must insert at each location in the LaTeX file, where for example an image is to be inserted, this certain tag: ":!:"
-                   for expample: <img src="images/Beispiel-tag.JPG" alt="eine grafik"></li>
-              <li> Behind this tag you have to insert the file name with the appropriate file extension</li>
-              <li> An Example: If you want to insert a .tif file in your LaTeX file, then you have to include this: ":!:myImage.tif" at the appropriate spot in your LaTeX code.</li>
-            </ul>
-          </ul>
-          <ul>
-            <li> Once authenticated, you can click the Publish Button for uploading your own paper.</li>
-            <li> In the window that opens, you can give your paper a title, add the authors name and choose the actual date for your publication.</li>
-            <li> In the first file explorer you can choose your LaTeX document from your files.</li>
-            <li> Afterwards you can choose in the second file explorer all data which need to be included for your LaTeX document, as</li>
-          </ul>
-          <ul>
-            <ul>
-              <li>GeoJSON files for vector data (.json),</li>
-              <li>GeoTIFF  files for raster data (.tif), </li>
-              <li>RData files for time series (as zoo or xts objects) and </li>
-              <li>RData files for spatial data (as sp objects)</li>
-            </ul>
-          </ul>
-          <ul>
-            <li> Click Upload and you're done.</li>
-            <li> Now your paper will be uploaded, which could take a few seconds.</li>
-          </ul>
-        </p>
-        <p>
-          <h3>How to search a paper</h3>
-        </p>
-        <p>
-          When you are looking for a previously published paper, you must enter a search term like the authors name, the title of the paper<br>
-          or the release date in the appropriate box on homepage.
-        </p>
-        <p>
-          <h3>How to show your own papers</h3>
-        </p>
-        <p>
-          When you want to have a look on your own publications, you need to click, after you have logged in, the button in the upper right corner
-          on which now your username should be. Click on "Show your own publications" and you should be able to see your own publications.
-        </p>
-        <p>
-          <h3>How to delete a private paper</h3>
-        </p>
-        <p>
-          To delete a private paper you have to select the appropriate paper and scroll down to the end of the page. There you will see a delete button.
-          When you click to, your own paper will be cleared.
-        </p>
-        <p>
-          <h3>How to Logout from Skypaper</h3>
-        </p>
-        <p>
-          When you're done and want to logout from Skypaper you only need to click the Logout Butten in the upper right corner and you will be logged out.
-        </p>
-
+       <h3><a id="How_to_use_Skypaper_0"></a>How to use Skypaper</h3>
+        <h5><a id="How_to_Login_2"></a>How to Login</h5>
+        <ul>
+        <li>Use the login button for authentication with Google.</li>
+        <li>A Google account is required to use Skypaper.</li>
+        </ul>
+        <h4><a id="How_to_publish_a_paper_7"></a>How to publish a paper</h4>
+        <p>Publications need to be submitted as LaTeX files. Optionally, additional files like images or spatial/temporal data can be included using the second file chooser.
+        Spatial data will be visualized with Leaflet, Time series data with Flot.</p>
+        <h6><a id="Include_temporalspatial_data_for_visualization_12"></a>Include temporal/spatial data for visualization</h6>
+        <ul>
+        <li>
+        <p>Supported file formats are TIFF, JSON and Rdata (only sp, zoo or xts objects)</p>
+        </li>
+        <li>
+        <p>Include the Skypaper tag <code>:!:</code> and your filename at every position you like to visualize data.
+        Make sure you have added exactly the name of the file including the extension.</p>
+        </li>
+        </ul>
+        <p>Example: If you want to insert a .tif file, include: “:!:yourFileName.tif”
+        at the appropriate spot in your LaTeX code.
+        <img src="/public/images/BeispielTag2.JPG" alt="Beispiel Tag" title="Tag"></p>
+        <h6><a id="Upload_process_22"></a>Upload process</h6>
+        <ul>
+        <li>
+        <p>It is strongly recommended to copy all files used in the paper in one directory before starting the upload process</p>
+        </li>
+        <li>
+        <p>Click the upload button and choose title, date, author(s) and search terms. A value for each section is required.</p>
+        </li>
+        <li>
+        <p>Select your main LaTeX document from your files at the first file chooser.</p>
+        </li>
+        <li>
+        <p>Select additional data such as images or temporal/spatial data as described above at the second file chooser.</p>
+        </li>
+        <li>
+        <p>Click <em>Upload</em> and you’re done. It may take a few minutes to do all conversions.</p>
+        </li>
+        <li>
+        <p>Check the paper for red colored error tags. If necessary delete it and reupload a corrected version.</p>
+        </li>
+        </ul>
+        <h4><a id="How_to_show_only_paper_uploaded_by_yourself_35"></a>How to show only paper uploaded by yourself</h4>
+        <p>If you want to have a look on your own publications, click the login button in the upper right corner after loggin in and select <em>Show my publications</em>.</p>
+        <h4><a id="How_to_delete_a_paper_39"></a>How to delete a paper</h4>
+        <p>To delete a paper you have to select the appropriate paper and scroll down to the delete button at end of the page.
+        It is only possible to delete papers uploaded from your account.</p>
       </div>
     </div>
   </div>
