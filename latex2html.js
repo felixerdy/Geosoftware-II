@@ -33,13 +33,13 @@ exports.convert = function(inputdir, input, paper) {
     lmlpost.on('exit', function(code) {
       console.log("Step 2: latexmlpost finished, returning " + code);
 
+      process.chdir(currentwdir);
       if (code != 0) {
         paper.processing_state = -2;
         paper.save(function(error) {});
         return;
       }
 
-      process.chdir(currentwdir);
 
       // inject script tags
       try {

@@ -8,7 +8,6 @@ var myInterval = undefined;
 *@param paperID of paper which conversion status will be checked
 */
 function checkConversionStatus(paperID){
-  console.log('cCS: ' + paperID);
   $.ajax({
     url: location.origin + '/getPaperById?id=' + paperID,
     type: 'GET',
@@ -26,7 +25,6 @@ function checkConversionStatus(paperID){
         toastr.success('upload finished');
       }
 
-      console.log(content.processing_state);
       // close modal if latexml can't convert input
       if(content.processing_state < 0){
         var errorMessage = "unknown";
@@ -92,7 +90,6 @@ $("#uploadButton").click(function() {
       type: 'POST',
       data: formData,
       success: function(data) {
-        console.log(data.paperID);
         myInterval = window.setInterval(function() {
           checkConversionStatus(data.paperID);
         }, 5000);

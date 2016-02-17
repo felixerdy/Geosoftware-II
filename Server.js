@@ -17,8 +17,9 @@ var upload = multer({
 
 var Paper = require('./models/paperSchema');
 var Tiff = require('./models/tiffSchema');
-var converter = require('./models/latex2html');
 var User = require('./models/userSchema');
+
+var converter = require('./latex2html');
 
 var passport = require('passport');
 var StrategyGoogle = require('passport-google-openidconnect').Strategy;
@@ -234,7 +235,6 @@ app.post('/addPaper', paperupload, function(req, res) {
           sndcoord.x
         ];
 
-        console.log(tiff.coordinates);
 
         tiff.save(function(error) {
           if (error) {
