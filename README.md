@@ -43,10 +43,10 @@ Only the installation on Ubuntu 14.04.3 LTS and Ubuntu Server 14.04.3 LTS is des
    module.exports = keys; 
    ```
    Replace yourClientID and yourClientSecret with your own Google ClientID
-   and ClientSecret (see [google developers console](https://console.developers.google.com/)). Activate your Google+ API in       your API Manager and create an OAuth-Client-ID. As Callback URI add `http://[yourServername]:[yourPort]/auth/google/callback`, e.g. `http://localhost:8080/auth/google/callback`.
+   and ClientSecret. To get them activate your Google+ API in your API Manager and create an OAuth-Client-ID (see [google developers console](https://console.developers.google.com/)). As Callback URI add `http://[yourServername]:[yourPort]/auth/google/callback`, e.g. `http://localhost:8080/auth/google/callback`.
 
 ### Start Skypaper:
-1. Start your mongoDB
+1. Start your mongoDB.
 
 2. Start the server using `node Server.js`.
 
@@ -54,11 +54,11 @@ Only the installation on Ubuntu 14.04.3 LTS and Ubuntu Server 14.04.3 LTS is des
 
 
 
-### How to use Skypaper
+### How to use Skypaper:
 
 see [doc.md](./doc.md)
 
-### License
+### License:
 
 ISC:
 
