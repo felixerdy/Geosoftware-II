@@ -13,7 +13,7 @@
 ###### Include temporal/spatial data for visualization 
   - Supported file formats are TIFF, JSON and Rdata (only sp, zoo or xts objects)
 
-  - Include the Skypaper tag `:!:` and your filename at every position you like to visualize data.
+  - Include the Skypaper tag `:!:` and your filename at every position you like inside your text to visualize data.
     Make sure you have added exactly the name of the file including the extension.
 
    Example: If you want to insert a .tif file, include: `:!:yourFileName.tif`
