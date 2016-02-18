@@ -14,7 +14,7 @@ Only the installation on Ubuntu 14.04.3 LTS and Ubuntu Server 14.04.3 LTS is des
    can be found at https://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu
 
 2. Install R with Ubuntu package r-base.
-   In addition, the R-packages r-gdal and xts must be installed.
+   In addition, the R-packages r-gdal and xts must be installed (depend zoo and sp package).
    R commands for this are: `install.packages("r-gdal")` and 
    `install.packages("xts")`
    
@@ -51,7 +51,6 @@ Only the installation on Ubuntu 14.04.3 LTS and Ubuntu Server 14.04.3 LTS is des
 2. Start the server using `node Server.js`.
 
 3. The application is available under port 8080.
-
 
 
 ### How to use Skypaper:
